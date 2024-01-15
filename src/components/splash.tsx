@@ -1,5 +1,14 @@
-import { Box, Button, Stack, Title, Text, Image, BoxProps } from "@mantine/core";
-import classes from "./splash.module.css"
+import {
+  Box,
+  Button,
+  Stack,
+  Title,
+  Text,
+  Image,
+  BoxProps,
+} from "@mantine/core";
+import classes from "./splash.module.css";
+import cover from "/public/cover-image.jpg";
 
 function Splash(props: BoxProps) {
   return (
@@ -10,10 +19,7 @@ function Splash(props: BoxProps) {
           Murder Mystery Entertainment | Headquartered in Maryland
         </Text>
         <Button>CALL (410) 549 2722</Button>
-        <Image
-          src="https://lh3.googleusercontent.com/p/AF1QipOAK-3NDFsQaydhIDih4kSwG-e-5yq4NUw1z1jz=w1080-h608-p-no-v0"
-          alt="Whodunnitforhire splash image"
-        />
+        <Image src={cover.src} alt="Whodunnitforhire splash image" />
       </Stack>
     </Box>
   );
