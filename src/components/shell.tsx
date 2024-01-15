@@ -1,11 +1,4 @@
-import {
-  AppShell,
-  Burger,
-  Group,
-  Title,
-  Stack,
-  Button,
-  } from "@mantine/core";
+import { AppShell, Burger, Group, Title, Stack, Button } from "@mantine/core";
 import { PropsWithChildren } from "react";
 import { IconCalendarEvent, IconPhone } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
@@ -108,9 +101,13 @@ function Shell(props: PropsWithChildren<ShellProps>) {
               fw="normal"
               leftSection={<IconCalendarEvent size={14} />}
             >
-              Make Appointment
+              Upcoming Events
             </Button>
-            <ThemeButton variant="subtle" color="var(--mantine-color-text)" radius="xl" />
+            <ThemeButton
+              variant="subtle"
+              color="var(--mantine-color-text)"
+              radius="xl"
+            />
           </Group>
         </Group>
       </AppShell.Header>
