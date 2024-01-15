@@ -3,6 +3,7 @@ import Shell from "@/components/shell";
 import Splash from "@/components/splash";
 import { Stack } from "@mantine/core";
 import Updates from "@/components/updates";
+import Testimonials from "@/components/testimonials";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
           <Stack gap={100}>
             <Splash mt={40} />
             <Updates />
+            <Testimonials />
           </Stack>
         </Shell>
       </main>
