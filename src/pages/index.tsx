@@ -1,5 +1,6 @@
-import Head from 'next/head'
-import { Title } from '@mantine/core'
+import Head from "next/head";
+import { Text } from "@mantine/core";
+import Shell from "@/components/shell";
 
 export default function Home() {
   return (
@@ -11,8 +12,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Title c="var(--mantine-primary-color)">Hello, world</Title>
+        <Shell>
+          <Text ta="center">Hello, world</Text>
+        </Shell>
       </main>
     </>
-  )
+  );
 }
