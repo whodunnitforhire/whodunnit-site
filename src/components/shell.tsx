@@ -3,11 +3,9 @@ import {
   Burger,
   Group,
   Title,
-  Text,
   Stack,
   Button,
-  AppShellNavbarProps,
-} from "@mantine/core";
+  } from "@mantine/core";
 import { PropsWithChildren } from "react";
 import { IconCalendarEvent, IconPhone } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
@@ -35,19 +33,44 @@ function Shell(props: PropsWithChildren<ShellProps>) {
     >
       <AppShell.Navbar p="lg">
         <Stack align="stretch">
-          <Button variant="subtle" color="var(--mantine-color-text)" size="xl" fw="normal">
+          <Button
+            variant="subtle"
+            color="var(--mantine-color-text)"
+            size="xl"
+            fw="normal"
+          >
             Updates
           </Button>
-          <Button variant="subtle" color="var(--mantine-color-text)" size="xl" fw="normal">
+          <Button
+            variant="subtle"
+            color="var(--mantine-color-text)"
+            size="xl"
+            fw="normal"
+          >
             Testimonials
           </Button>
-          <Button variant="subtle" color="var(--mantine-color-text)" size="xl" fw="normal">
+          <Button
+            variant="subtle"
+            color="var(--mantine-color-text)"
+            size="xl"
+            fw="normal"
+          >
             About us
           </Button>
-          <Button variant="subtle" color="var(--mantine-color-text)" size="xl" fw="normal">
+          <Button
+            variant="subtle"
+            color="var(--mantine-color-text)"
+            size="xl"
+            fw="normal"
+          >
             Gallery
           </Button>
-          <Button variant="subtle" color="var(--mantine-color-text)" size="xl" fw="normal">
+          <Button
+            variant="subtle"
+            color="var(--mantine-color-text)"
+            size="xl"
+            fw="normal"
+          >
             Contact
           </Button>
         </Stack>
@@ -65,11 +88,13 @@ function Shell(props: PropsWithChildren<ShellProps>) {
               Whodunnit for Hire
             </Title>
           </Group>
-          <Group visibleFrom="xs">
+          <Group visibleFrom="xs" gap={0}>
             <Button
               component="a"
               href="tel:+1-410-549-2722"
-              variant="default"
+              variant="transparent"
+              color="var(--mantine-color-text)"
+              fw="normal"
               leftSection={<IconPhone size={14} />}
             >
               Call Now
@@ -78,12 +103,14 @@ function Shell(props: PropsWithChildren<ShellProps>) {
               component="a"
               href="https://whodunnit-for-hire.eventbrite.com/"
               target="_blank"
-              variant="default"
+              variant="transparent"
+              color="var(--mantine-color-text)"
+              fw="normal"
               leftSection={<IconCalendarEvent size={14} />}
             >
               Make Appointment
             </Button>
-            <ThemeButton />
+            <ThemeButton variant="subtle" color="var(--mantine-color-text)" radius="xl" />
           </Group>
         </Group>
       </AppShell.Header>

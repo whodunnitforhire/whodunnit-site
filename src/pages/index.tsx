@@ -1,6 +1,6 @@
 import Head from "next/head";
-import { Text } from "@mantine/core";
 import Shell from "@/components/shell";
+import Splash from "@/components/splash";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       </Head>
       <main>
         <Shell>
-          <Text ta="center">Hello, world</Text>
+          <Splash mt={40} />
         </Shell>
       </main>
     </>

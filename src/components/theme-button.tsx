@@ -1,11 +1,12 @@
 import {
   ActionIcon,
+  ActionIconProps,
   useComputedColorScheme,
   useMantineColorScheme,
 } from "@mantine/core";
 import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
 
-function ThemeButton() {
+function ThemeButton(props: ActionIconProps) {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light");
 
@@ -19,6 +20,7 @@ function ThemeButton() {
       size="lg"
       aria-label="Color theme toggle"
       onClick={toggleColorScheme}
+      {...props}
     >
       {computedColorScheme === "dark" ? (
         <IconSunFilled style={{ width: "50%", height: "50%" }} />
