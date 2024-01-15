@@ -38,7 +38,7 @@ function Testimonials(props: BoxProps) {
       </SimpleGrid>
       <Group mt={60} gap="xl" justify="center">
         <Button
-          variant="test"
+          variant="underlined"
           component="a"
           href="https://search.google.com/local/writereview?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw"
           target="_blank"
@@ -46,7 +46,7 @@ function Testimonials(props: BoxProps) {
           WRITE A REVIEW
         </Button>
         <Button
-          variant="test"
+          variant="underlined"
           component="a"
           href="https://search.google.com/local/reviews?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw"
           target="_blank"

@@ -1,0 +1,11 @@
+.root {
+    &[data-variant='underlined'] {
+        background-color: rgba(0, 0, 0, 0);
+        /* background-color: blue; */
+        border-radius: 0;
+        padding: 0;
+        font-size: large;
+        border-bottom: rem(1px) solid var(--mantine-primary-color);
+        color: var(--mantine-primary-color);
+    }
+}

@@ -23,7 +23,7 @@ function Updates(props: BoxProps) {
                 <Text c="dimmed">{card.caption}</Text>
                 <Text>{card.content}</Text>
                 <Button
-                  variant="test"
+                  variant="underlined"
                   component="a"
                   href={card.buttonLink}
                   target="_blank"
