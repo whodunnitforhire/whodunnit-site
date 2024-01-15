@@ -4,6 +4,7 @@ import Splash from "@/components/splash";
 import { Stack } from "@mantine/core";
 import Updates from "@/components/updates";
 import Testimonials from "@/components/testimonials";
+import AboutUs from "@/components/about-us";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
             <Splash mt={40} />
             <Updates />
             <Testimonials />
+            <AboutUs />
           </Stack>
         </Shell>
       </main>
