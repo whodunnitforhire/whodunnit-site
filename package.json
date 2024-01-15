@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/baskervville": "^5.0.18",
     "@mantine/carousel": "^7.4.1",
     "@mantine/core": "^7.4.1",
     "@mantine/dropzone": "^7.4.1",
