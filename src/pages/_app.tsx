@@ -1,5 +1,6 @@
 import '@/styles/globals.css'
 import '@mantine/core/styles.css'
+import '@mantine/carousel/styles.css';
 import '@fontsource/baskervville';
 import type { AppProps } from 'next/app'
 import { createTheme, MantineProvider, CSSVariablesResolver } from '@mantine/core';

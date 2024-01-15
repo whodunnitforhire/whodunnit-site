@@ -1,6 +1,8 @@
 import Head from "next/head";
 import Shell from "@/components/shell";
 import Splash from "@/components/splash";
+import { Stack } from "@mantine/core";
+import Updates from "@/components/updates";
 
 export default function Home() {
   return (
@@ -13,7 +15,10 @@ export default function Home() {
       </Head>
       <main>
         <Shell>
-          <Splash mt={40} />
+          <Stack gap={100}>
+            <Splash mt={40} />
+            <Updates />
+          </Stack>
         </Shell>
       </main>
     </>
