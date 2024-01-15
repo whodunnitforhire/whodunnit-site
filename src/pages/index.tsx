@@ -5,6 +5,7 @@ import { Stack } from "@mantine/core";
 import Updates from "@/components/updates";
 import Testimonials from "@/components/testimonials";
 import AboutUs from "@/components/about-us";
+import Gallery from "@/components/gallery";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
             <Updates />
             <Testimonials />
             <AboutUs />
+            <Gallery />
           </Stack>
         </Shell>
       </main>
