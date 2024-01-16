@@ -10,6 +10,8 @@ import {
   Button,
 } from "@mantine/core";
 import buttons from "@/styles/buttons.module.css";
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
 
 export const theme = createTheme({
   primaryColor: "violet",
@@ -34,10 +36,12 @@ export const resolver: CSSVariablesResolver = (theme) => ({
   },
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps, session: Session) {
   return (
-    <MantineProvider theme={theme} cssVariablesResolver={resolver}>
-      <Component {...pageProps} />
-    </MantineProvider>
+    <SessionProvider session={session}>
+      <MantineProvider theme={theme} cssVariablesResolver={resolver}>
+        <Component {...pageProps} />
+      </MantineProvider>
+    </SessionProvider>
   );
 }
