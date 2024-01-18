@@ -1,8 +1,7 @@
-import { unstable_noStore as noStore } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { redirect } from "next/navigation";
-import { AppShell } from "@mantine/core";
+import { AppShell, Text, Container, Stack, Button } from "@mantine/core";
 import Header from "./_components/Header";
 
 export default async function Dashboard() {
@@ -17,15 +16,8 @@ export default async function Dashboard() {
   const access = await getPermission("access:dashboard");
 
   if (!access?.isGranted) {
-    return (
-      <>
-        <p>This page has restricted access.</p>
-        <LogoutLink postLogoutRedirectURL="/">Logout</LogoutLink>
-      </>
-    );
+    return <UnauthorizedPage />;
   }
-
-  noStore();
 
   const user = await getUser();
 
@@ -35,5 +27,19 @@ export default async function Dashboard() {
         <Header userEmail={user?.email || "unkown"} h={60} px="xl" />
       </AppShell>
     </>
+  );
+}
+
+function UnauthorizedPage() {
+  "use client";
+  return (
+    <Container mx="auto" mt={100}>
+      <Stack gap="lg" justify="center" align="center">
+        <Text>This page has restricted access.</Text>
+        <LogoutLink postLogoutRedirectURL="/">
+          <Button color="red">Logout</Button>
+        </LogoutLink>
+      </Stack>
+    </Container>
   );
 }

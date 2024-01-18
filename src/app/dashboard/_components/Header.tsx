@@ -1,5 +1,6 @@
 "use client";
 
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import {
   ActionIcon,
@@ -50,6 +51,7 @@ export default function Header(props: AppShellHeaderProps & HeaderProps) {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
+          <ThemeToggleButton size="lg" />
         </Group>
       </Group>
     </AppShellHeader>
