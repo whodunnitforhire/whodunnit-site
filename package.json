@@ -13,6 +13,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fontsource/baskervville": "^5.0.18",
     "@kinde-oss/kinde-auth-nextjs": "^2.1.3",
     "@mantine/carousel": "^7.4.2",
     "@mantine/core": "^7.4.2",
