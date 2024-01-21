@@ -16,6 +16,7 @@ import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import ReviewEditor from "./ReviewEditor";
 import { api } from "@/trpc/react";
 import { IconInfoCircle, IconNews, IconStar } from "@tabler/icons-react";
+import InfoEditor from "./InfoEditor";
 
 type PageContentProps = {
   user: KindeUser;
@@ -25,6 +26,7 @@ export default function PageContent(
   props: AppShellMainProps & PageContentProps
 ) {
   const reviews = api.review.getAll.useQuery().data;
+  const about = api.about.getAll.useQuery().data;
 
   return (
     <AppShell>
@@ -45,7 +47,7 @@ export default function PageContent(
             </Tabs.List>
             <Space h="xl" />
             <Tabs.Panel value="updates">
-                <Text>Updates Panel</Text>
+              <Text>Updates Panel</Text>
             </Tabs.Panel>
             <Tabs.Panel value="reviews">
               <SimpleGrid cols={3} spacing="lg">
@@ -55,7 +57,9 @@ export default function PageContent(
               </SimpleGrid>
             </Tabs.Panel>
             <Tabs.Panel value="info">
-                <Text>Info Panel</Text>
+              {about && about?.length > 0 && about[0] && (
+                <InfoEditor about={about[0]} />
+              )}
             </Tabs.Panel>
           </Tabs>
         </Box>

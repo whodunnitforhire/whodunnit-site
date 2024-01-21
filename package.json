@@ -25,6 +25,7 @@
     "@tabler/icons-react": "^2.46.0",
     "@tanstack/react-query": "^4.36.1",
     "@tiptap/extension-link": "^2.1.16",
+    "@tiptap/pm": "^2.1.16",
     "@tiptap/react": "^2.1.16",
     "@tiptap/starter-kit": "^2.1.16",
     "@trpc/client": "^10.43.6",
