@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import '@fontsource/baskervville';
 
 import { Inter as FontSans } from "next/font/google";
 
