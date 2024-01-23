@@ -14,11 +14,25 @@ datasource db {
     relationMode = "prisma"
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
+model About {
+    id        String   @id @default(cuid())
     updatedAt DateTime @updatedAt
+    content   String   @db.Text
+}
 
-    @@index([name])
+model Update {
+    id         String   @id @default(cuid())
+    updatedAt  DateTime @updatedAt
+    imageUrl   String   @db.VarChar(2083)
+    caption    String   @db.VarChar(255)
+    content    String   @db.Text
+    actionName String   @db.VarChar(255)
+    actionLink String   @db.VarChar(2083)
+}
+
+model Review {
+    id      String @id @default(cuid())
+    rating  Int
+    content String @db.Text
+    author  String @db.VarChar(255)
 }
