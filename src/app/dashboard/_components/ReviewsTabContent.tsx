@@ -23,31 +23,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function ReviewsTabContent() {
-  const { data: reviews, isLoading: reviewsLoading } =
-    api.review.getAll.useQuery();
-  
-  const [ isEditing, setIsEditing ] = useState(false);
+type ReviewsTabContentProps = {
+  initialReviews: RouterOutputs["review"]["getAll"];
+};
 
-  // TODO: improve loading view
-  if (reviewsLoading) {
-    return <p>Loading reviews...</p>;
-  }
+export default function ReviewsTabContent(props: ReviewsTabContentProps) {
+  const { data: reviews } = api.review.getAll.useQuery(undefined, {
+    initialData: props.initialReviews,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
+  const [isEditing, setIsEditing] = useState(false);
 
   return (
     <div className="flex flex-col gap-4 pt-4">
       <div className="flex gap-4">
         <h1 className="text-3xl font-medium">Reviews</h1>
         {isEditing ? (
-        <Button onClick={() => setIsEditing(false)}>
-          <ScanSearch className="h-6 w-6 pr-2" />
-          <span>View</span>
-        </Button>
+          <Button onClick={() => setIsEditing(false)}>
+            <ScanSearch className="h-6 w-6 pr-2" />
+            <span>View</span>
+          </Button>
         ) : (
-        <Button onClick={() => setIsEditing(true)}>
-          <Edit className="h-6 w-6 pr-2" />
-          <span>Edit</span>
-        </Button>
+          <Button onClick={() => setIsEditing(true)}>
+            <Edit className="h-6 w-6 pr-2" />
+            <span>Edit</span>
+          </Button>
         )}
       </div>
       <Separator />
@@ -67,10 +69,10 @@ function ReviewView(props: {
   review: RouterOutputs["review"]["getAll"][number];
 }) {
   return (
-    <Card className="p-6 space-y-2 items-start">
-        <p className="text-lg font-medium">{props.review.author}</p>
-        <Rating count={props.review.rating} />
-        <p>{props.review.content}</p>
+    <Card className="items-start space-y-2 p-6">
+      <p className="text-lg font-medium">{props.review.author}</p>
+      <Rating count={props.review.rating} />
+      <p>{props.review.content}</p>
     </Card>
   );
 }
@@ -94,25 +96,25 @@ function ReviewEdit(props: {
     },
   });
 
-  const [ isLoading, setIsLoading ] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const utils = api.useUtils()
+  const utils = api.useUtils();
 
   const updateReview = api.review.update.useMutation({
     onMutate: () => {
       setIsLoading(true);
     },
-    onSettled:() => {
+    onSettled: () => {
       setIsLoading(false);
     },
     onError: () => {
-      toast.error("Something went wrong.")
+      toast.error("Something went wrong.");
     },
     onSuccess: () => {
       void utils.review.getAll.invalidate();
-      toast.success("Review updated.")
-    }
-  })
+      toast.success("Review updated.");
+    },
+  });
 
   function onSubmit(values: z.infer<typeof reviewFormSchema>) {
     updateReview.mutate({
@@ -120,7 +122,7 @@ function ReviewEdit(props: {
       author: values.author,
       rating: values.rating,
       content: values.content,
-    })
+    });
   }
 
   return (
@@ -168,7 +170,7 @@ function ReviewEdit(props: {
           />
           {isLoading ? (
             <Button type="submit" disabled>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               <span>Apply changes</span>
             </Button>
           ) : (

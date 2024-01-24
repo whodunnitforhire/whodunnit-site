@@ -4,8 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 import ReviewsTabContent from "./_components/ReviewsTabContent";
+import { api } from "@/trpc/server";
 
 export default async function Dashboard() {
+  const reviews = await api.review.getAll.query();
+
   return (
     <>
       <DashboardNavbar userEmail="test@gmail.com" />
@@ -27,7 +30,7 @@ export default async function Dashboard() {
             </Card>
           </TabsContent>
           <TabsContent value="reviews">
-            <ReviewsTabContent />
+            <ReviewsTabContent initialReviews={reviews} />
           </TabsContent>
           <TabsContent value="about">
             <Card>
