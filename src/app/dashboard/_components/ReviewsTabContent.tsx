@@ -28,7 +28,11 @@ type ReviewsTabContentProps = {
 }
 
 export default function ReviewsTabContent(props: ReviewsTabContentProps) {
-  const { data: reviews } = api.review.getAll.useQuery();
+  const { data: reviews } = api.review.getAll.useQuery(undefined, {
+    initialData: props.intialReviews,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 
   const [isEditing, setIsEditing] = useState(false);
 
