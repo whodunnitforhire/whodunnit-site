@@ -23,16 +23,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type ReviewsTabContentProps = {
-  initialReviews: RouterOutputs["review"]["getAll"];
-};
-
-export default function ReviewsTabContent(props: ReviewsTabContentProps) {
-  const { data: reviews } = api.review.getAll.useQuery(undefined, {
-    initialData: props.initialReviews,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
+export default function ReviewsTabContent() {
+  const { data: reviews } = api.review.getAll.useQuery();
 
   const [isEditing, setIsEditing] = useState(false);
 
