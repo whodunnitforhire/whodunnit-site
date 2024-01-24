@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
+import ReviewsTabContent from "./_components/ReviewsTabContent";
 
 export default async function Dashboard() {
   return (
@@ -26,14 +27,7 @@ export default async function Dashboard() {
             </Card>
           </TabsContent>
           <TabsContent value="reviews">
-            <Card>
-              <CardHeader>
-                <CardTitle>Reviews</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ReviewsTabContent />
-              </CardContent>
-            </Card>
+            <ReviewsTabContent />
           </TabsContent>
           <TabsContent value="about">
             <Card>
@@ -52,8 +46,6 @@ export default async function Dashboard() {
 }
 
 function UpdatesTabContent() {
-  "use client";
-
   return (
     <>
       <p>Updates content</p>
@@ -61,19 +53,7 @@ function UpdatesTabContent() {
   )
 }
 
-function ReviewsTabContent() {
-  "use client";
-
-  return (
-    <>
-      <p>Reviews content</p>
-    </>
-  )
-}
-
 function AboutTabContent() {
-  "use client";
-
   return (
     <>
       <p>About content</p>

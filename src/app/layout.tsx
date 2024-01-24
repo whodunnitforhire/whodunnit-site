@@ -6,6 +6,7 @@ import { Inter as FontSans } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "sonner";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <Toaster position="top-center" />
           </ThemeProvider>
         </TRPCReactProvider>
       </body>
