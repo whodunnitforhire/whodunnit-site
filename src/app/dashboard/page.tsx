@@ -62,7 +62,7 @@ async function DashboardNavbar(props: { userEmail: string }) {
             <Button size="sm" variant="outline">
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <p className="text-lg">Dashboard</p>
+            <p className="text-lg min-w-0">Dashboard</p>
           </div>
           <div className="flex items-center justify-center gap-2">
             <p>{props.userEmail}</p>
