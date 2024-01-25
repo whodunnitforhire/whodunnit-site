@@ -8,16 +8,37 @@ export const updateRouter = createTRPCRouter({
       include: {
         image: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }),
 
-  // TODO: implement auth and use private procedure
+  // TODO: private procedure
+  create: publicProcedure
+    .input(
+      z.object({
+        title: z.string().min(1).max(255),
+        caption: z.optional(z.string().max(255)),
+        content: z.string().min(1),
+        imageId: z.string(),
+        buttonName: z.string().min(1).max(255),
+        buttonLink: z.string().min(1).max(2083),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.update.create({
+        data: { ...input, caption: input.caption ?? "" },
+      });
+    }),
+
+  // TODO: private procedure
   update: publicProcedure
     .input(
       z.object({
         id: z.string().min(1),
         title: z.string().min(1).max(255),
-        caption: z.optional(z.string().min(1).max(255)),
+        caption: z.optional(z.string().max(255)),
         content: z.string().min(1),
         imageId: z.string(),
         buttonName: z.string().min(1).max(255),
@@ -29,14 +50,16 @@ export const updateRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
-        data: {
-          title: input.title,
-          caption: input.caption,
-          content: input.content,
-          imageId: input.imageId,
-          buttonName: input.buttonName,
-          buttonLink: input.buttonLink,
-        },
+        data: { ...input },
       });
     }),
+
+  // TODO: private procedure
+  delete: publicProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    return ctx.db.update.delete({
+      where: {
+        id: input,
+      },
+    });
+  }),
 });

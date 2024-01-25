@@ -3,15 +3,29 @@
 import { type RouterOutputs } from "@/trpc/shared";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { Edit, PlusSquare } from "lucide-react";
+import { Edit, Loader2, PlusSquare, Save, Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import Link from "next/link";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import React from "react";
+import { DialogTitle, Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import React, { useState, type ReactNode } from "react";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator  } from "@/components/ui/dropdown-menu";
 
 type UpdatesTabContentProps = {
   initialUpdates: RouterOutputs["update"]["getAll"];
@@ -29,10 +43,12 @@ export default function UpdatesTabContent(props: UpdatesTabContentProps) {
     <div className="flex flex-col gap-4 pt-4">
       <div className="flex gap-4">
         <h1 className="text-3xl font-medium">Updates</h1>
-        <Button>
-          <PlusSquare className="h-6 w-6 pr-2" />
-          <span>New post</span>
-        </Button>
+        <UpdateEditDialog>
+          <Button>
+            <PlusSquare className="h-6 w-6 pr-2" />
+            <span>New post</span>
+          </Button>
+        </UpdateEditDialog>
       </div>
       <Separator />
       <div className="grid auto-rows-fr grid-cols-1 gap-4 break-words pb-12 pt-4 md:grid-cols-2 lg:grid-cols-3">
@@ -51,6 +67,7 @@ function UpdateView(props: {
   return (
     <div className="relative">
       <Card className="flex h-full flex-col">
+        <UpdateEditDialog update={props.update}>
           <Button
             variant="outline"
             className="absolute right-4 top-4 z-50 space-x-2 shadow-md"
@@ -58,6 +75,7 @@ function UpdateView(props: {
             <Edit className="h-4 w-4" />
             <span>Edit</span>
           </Button>
+        </UpdateEditDialog>
         <AspectRatio ratio={2 / 1}>
           <Image
             src={props.update.image.url}
@@ -99,5 +117,226 @@ function UpdateView(props: {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+const updateFormSchema = z.object({
+  title: z.string().min(1).max(255),
+  caption: z.optional(z.string().max(255)),
+  content: z.string().min(1),
+  imageId: z.string(),
+  buttonName: z.string().min(1).max(255),
+  buttonLink: z.string().min(1).max(2083),
+});
+
+export function UpdateEditDialog(props: {
+  update?: RouterOutputs["update"]["getAll"][number];
+  children: ReactNode;
+}) {
+  const form = useForm<z.infer<typeof updateFormSchema>>({
+    resolver: zodResolver(updateFormSchema),
+    defaultValues: { ...props.update },
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  function setOpenAndReset(toOpen: boolean) {
+    if (toOpen) {
+      form.reset({ ...props.update });
+    }
+    setOpen(() => toOpen);
+  }
+
+  const submitButtonTitle = !props.update ? "Create" : "Apply";
+
+  const utils = api.useUtils();
+
+  const updateUpdate = api.update.update.useMutation({
+    onMutate: () => {
+      setIsLoading(true);
+    },
+    onSettled: () => {
+      setIsLoading(false);
+    },
+    onError: () => {
+      toast.error("Something went wrong.");
+    },
+    onSuccess: () => {
+      void utils.update.getAll.invalidate();
+      toast.success("Review updated.");
+      setOpen(false);
+    },
+  });
+
+  const createUpdate = api.update.create.useMutation({
+    onMutate: () => {
+      setIsLoading(true);
+    },
+    onSettled: () => {
+      setIsLoading(false);
+    },
+    onError: () => {
+      toast.error("Something went wrong.");
+    },
+    onSuccess: () => {
+      void utils.update.getAll.invalidate();
+      toast.success("Review created.");
+      setOpen(false);
+    },
+  });
+
+  const deleteUpdate = api.update.delete.useMutation({
+    onMutate: () => {
+      setIsLoading(true);
+    },
+    onSettled: () => {
+      setIsLoading(false);
+    },
+    onError: () => {
+      toast.error("Something went wrong.");
+    },
+    onSuccess: () => {
+      void utils.update.getAll.invalidate();
+      toast.success("Review deleted.");
+      setOpen(false);
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof updateFormSchema>) {
+    if (props.update) {
+      updateUpdate.mutate({ ...values, id: props.update.id });
+    } else {
+      createUpdate.mutate({ ...values });
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpenAndReset}>
+      <DialogTrigger asChild>{props.children}</DialogTrigger>
+      <DialogContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="imageId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="caption"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Caption{" "}
+                    <span className="text-muted-foreground">(optional)</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Content</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} className="h-40" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="buttonName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Button title</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="buttonLink"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Button link</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Separator />
+            <div className="container flex items-center justify-center gap-4">
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <Button type="submit" disabled={!open}>
+                    <Save className="mr-2 h-4 w-4" />
+                    {submitButtonTitle}
+                  </Button>
+                  {!!props.update && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="destructive" disabled={!open}>
+                          <Trash className="mr-2 h-4 w-4" />
+                          {"Delete"}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="shadow-md">
+                        <DropdownMenuLabel>Are you sure?</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => {
+                            deleteUpdate.mutate(props.update!.id);
+                          }}
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </>
+              )}
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
