@@ -32,6 +32,7 @@ export default function ReviewsTabContent(props: ReviewsTabContentProps) {
     initialData: props.intialReviews,
     refetchOnMount: false,
     refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 
   const [isEditing, setIsEditing] = useState(false);

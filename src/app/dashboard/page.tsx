@@ -5,11 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 import ReviewsTabContent from "./_components/ReviewsTabContent";
 import { api } from "@/trpc/server";
+import UpdatesTabContent from "./_components/UpdatesTabContent";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
   const reviews = await api.review.getAll.query();
+  const updates = await api.update.getAll.query();
 
   return (
     <>
@@ -22,14 +24,7 @@ export default async function Dashboard() {
             <TabsTrigger value="about">About</TabsTrigger>
           </TabsList>
           <TabsContent value="updates">
-            <Card>
-              <CardHeader>
-                <CardTitle>Updates</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <UpdatesTabContent />
-              </CardContent>
-            </Card>
+            <UpdatesTabContent initialUpdates={updates} />
           </TabsContent>
           <TabsContent value="reviews">
             <ReviewsTabContent intialReviews={reviews} />
@@ -50,26 +45,18 @@ export default async function Dashboard() {
   );
 }
 
-function UpdatesTabContent() {
-  return (
-    <>
-      <p>Updates content</p>
-    </>
-  )
-}
-
 function AboutTabContent() {
   return (
     <>
       <p>About content</p>
     </>
-  )
+  );
 }
 
 async function DashboardNavbar(props: { userEmail: string }) {
   return (
     <>
-      <div className="border-border flex w-full items-center justify-center border-b p-2 px-4">
+      <div className="flex w-full items-center justify-center border-b border-border p-2 px-4">
         <div className="flex w-full max-w-7xl items-center justify-between">
           <div className="flex items-center justify-center gap-4">
             <Button size="sm" variant="outline">
