@@ -26,6 +26,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator  } from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { type CheckedState } from "@radix-ui/react-checkbox";
 
 type UpdatesTabContentProps = {
   initialUpdates: RouterOutputs["update"]["getAll"];
@@ -96,7 +99,7 @@ function UpdateView(props: {
                 <DialogTrigger className="text-primary">
                   Show more
                 </DialogTrigger>
-                <DialogContent className="p-12">
+                <DialogContent className="p-8">
                   <DialogTitle>
                     <h1 className="text-lg font-semibold">
                       {props.update.title}
@@ -141,9 +144,13 @@ export function UpdateEditDialog(props: {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // set to true because checkbox is checked by default
+  const [autoDeleteOld, setAutoDeleteOld] = useState<CheckedState>(true);
+
   function setOpenAndReset(toOpen: boolean) {
     if (toOpen) {
       form.reset({ ...props.update });
+      setAutoDeleteOld(true)
     }
     setOpen(() => toOpen);
   }
@@ -198,15 +205,25 @@ export function UpdateEditDialog(props: {
     },
     onSuccess: () => {
       void utils.update.getAll.invalidate();
-      toast.success("Review deleted.");
+      toast.success("Post deleted.");
       setOpen(false);
     },
   });
+
+  // doesn't invalidate data because it's used alongside another endpoint
+  const deleteOldestUpdates = api.update.deleteAllButNewest.useMutation({
+    onError: () => {
+      toast.error("Failed to delete oldest.");
+    },
+  })
 
   function onSubmit(values: z.infer<typeof updateFormSchema>) {
     if (props.update) {
       updateUpdate.mutate({ ...values, id: props.update.id });
     } else {
+      if (autoDeleteOld === true) {
+        deleteOldestUpdates.mutate(8)
+      }
       createUpdate.mutate({ ...values });
     }
   }
@@ -266,7 +283,7 @@ export function UpdateEditDialog(props: {
                 <FormItem>
                   <FormLabel>Content</FormLabel>
                   <FormControl>
-                    <Textarea {...field} className="h-40" />
+                    <Textarea {...field} className="h-36" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -301,6 +318,14 @@ export function UpdateEditDialog(props: {
               />
             </div>
             <Separator />
+            {!props.update && (
+              <div className="container flex justify-center items-center space-x-2">
+                <Checkbox id="deletion" defaultChecked checked={autoDeleteOld} onCheckedChange={setAutoDeleteOld} />
+                <Label htmlFor="deletion" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  {"Auto delete old posts (keep 8 newest)"}
+                </Label>
+              </div>
+            )}
             <div className="container flex items-center justify-center gap-4">
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

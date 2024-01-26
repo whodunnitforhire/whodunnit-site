@@ -6,11 +6,11 @@ export const imageRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.image.findMany();
   }),
-  getById: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    return ctx.db.image.findUnique({
+  exists: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    return !!(await ctx.db.image.findFirst({
       where: {
         id: input,
       },
-    });
+    }));
   }),
 });
