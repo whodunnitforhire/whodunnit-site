@@ -6,12 +6,14 @@ import { ArrowLeft } from "lucide-react";
 import ReviewsTabContent from "./_components/ReviewsTabContent";
 import { api } from "@/trpc/server";
 import UpdatesTabContent from "./_components/UpdatesTabContent";
+import ImageChooser from "./_components/ImageChooser";
 
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
   const reviews = await api.review.getAll.query();
   const updates = await api.update.getAll.query();
+  const images = await api.image.getAll.query();
 
   return (
     <>
@@ -22,6 +24,7 @@ export default async function Dashboard() {
             <TabsTrigger value="updates">Updates</TabsTrigger>
             <TabsTrigger value="reviews">Reviews</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
+            <TabsTrigger value="images">Images</TabsTrigger>
           </TabsList>
           <TabsContent value="updates">
             <UpdatesTabContent initialUpdates={updates} />
@@ -38,6 +41,9 @@ export default async function Dashboard() {
                 <AboutTabContent />
               </CardContent>
             </Card>
+          </TabsContent>
+          <TabsContent value="images">
+            <ImageChooser initialImages={images} />
           </TabsContent>
         </Tabs>
       </div>
