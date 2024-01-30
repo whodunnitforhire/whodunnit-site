@@ -24,6 +24,7 @@ model Image {
     id        String    @id @default(cuid())
     createdAt DateTime  @default(now())
     url       String    @db.VarChar(2083)
+    size      Int
     updates   Update[]
     galleries Gallery[]
 }

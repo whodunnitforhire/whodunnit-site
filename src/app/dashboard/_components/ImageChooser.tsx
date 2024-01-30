@@ -16,6 +16,9 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { UploadButton } from "@/lib/uploadthing";
+import { type UploadFileResponse } from "uploadthing/client";
+
 export default function ImageChooser(props: {
   initialImages: RouterOutputs["image"]["getAll"];
 }) {
@@ -41,10 +44,36 @@ export default function ImageChooser(props: {
       toast.error("Something went wrong.");
     },
     onSuccess: () => {
-      void utils.image.getAll.invalidate()
+      void utils.image.getAll.invalidate();
       toast.success("Image deleted.");
     },
   });
+
+  const createImage = api.image.create.useMutation({
+    onMutate: () => {
+      setIsLoading(true);
+    },
+    onSettled: () => {
+      setIsLoading(false);
+    },
+    onError: () => {
+      toast.error("Something went wrong.");
+    },
+    onSuccess: () => {
+      void utils.image.getAll.invalidate();
+      toast.success("Image uploaded.");
+    },
+  })
+
+  function uploadImage(
+    res: UploadFileResponse<{
+      uploadedBy: string;
+    }>[],
+  ) {
+    res.map(img => {
+      createImage.mutate({ key: img.key, url: img.url, size: img.size });
+    })
+  }
 
   const imageGroup = (
     <ImageToggleGroup
@@ -52,6 +81,19 @@ export default function ImageChooser(props: {
       type="single"
       className="flex flex-wrap gap-4"
     >
+      <ImageToggleGroupItem
+        value={"create"}
+        className="h-24 w-32 p-0"
+      >
+        <UploadButton
+          endpoint="imageUploader"
+          onClientUploadComplete={uploadImage}
+          onUploadError={(error: Error) => {
+            toast.error(error.message)
+          }}
+          className="h-full w-full ut-button:bg-primary"
+        />
+      </ImageToggleGroupItem>
       {images.map((image) => {
         return (
           <ImageToggleGroupItem
@@ -61,9 +103,10 @@ export default function ImageChooser(props: {
           >
             <Image
               src={image.url}
-              layout="fill"
-              objectFit="cover"
+              fill
+              sizes="256px"
               alt="image"
+              className="object-cover rounded-md"
             />
             <Dialog>
               <DialogTrigger>
@@ -82,9 +125,8 @@ export default function ImageChooser(props: {
                 <AspectRatio ratio={2 / 1}>
                   <Image
                     src={image.url}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-sm"
+                    fill
+                    className="rounded-sm object-cover"
                     alt="image"
                   />
                 </AspectRatio>
