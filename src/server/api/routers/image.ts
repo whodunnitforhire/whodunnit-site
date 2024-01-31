@@ -22,6 +22,15 @@ export const imageRouter = createTRPCRouter({
       },
     }));
   }),
+  
+  // TODO: private procedure
+  getSizeAll: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.image.aggregate({
+      _sum: {
+        size: true
+      }
+    })
+  }),
 
   // TODO: private procedure
   create: publicProcedure
