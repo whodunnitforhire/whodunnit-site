@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, privateProcedure, publicProcedure } from "@/server/api/trpc";
 import { api } from "@/trpc/server";
 import { TRPCError } from "@trpc/server";
 
@@ -16,8 +16,7 @@ export const updateRouter = createTRPCRouter({
     });
   }),
 
-  // TODO: private procedure
-  create: publicProcedure
+  create: privateProcedure
     .input(
       z.object({
         title: z.string().min(1).max(255),
@@ -37,8 +36,7 @@ export const updateRouter = createTRPCRouter({
       });
     }),
 
-  // TODO: private procedure
-  update: publicProcedure
+  update: privateProcedure
     .input(
       z.object({
         id: z.string().min(1),
@@ -62,8 +60,7 @@ export const updateRouter = createTRPCRouter({
       });
     }),
 
-  // TODO: private procedure
-  delete: publicProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+  delete: privateProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     return ctx.db.update.delete({
       where: {
         id: input,
@@ -71,8 +68,7 @@ export const updateRouter = createTRPCRouter({
     });
   }),
 
-  // TODO: private procedure
-  deleteAllButNewest: publicProcedure.input(z.number()).mutation(async ({ ctx, input }) => {
+  deleteAllButNewest: privateProcedure.input(z.number()).mutation(async ({ ctx, input }) => {
     const thresholdRecord = await ctx.db.update.findMany({
       take: input,
       orderBy: {

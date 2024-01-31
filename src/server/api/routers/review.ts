@@ -1,14 +1,13 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure } from "@/server/api/trpc";
 
 export const reviewRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.review.findMany();
   }),
   
-  // TODO: implement auth and use private procedure
-  update: publicProcedure.input(
+  update: privateProcedure.input(
     z.object({
       id: z.string().min(1),
       rating: z.number().min(1).max(5),

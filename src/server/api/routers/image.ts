@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { UTApi } from 'uploadthing/server';
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
 const utapi = new UTApi()
@@ -23,8 +23,7 @@ export const imageRouter = createTRPCRouter({
     }));
   }),
   
-  // TODO: private procedure
-  getSizeAll: publicProcedure.query(async ({ ctx }) => {
+  getSizeAll: privateProcedure.query(async ({ ctx }) => {
     return ctx.db.image.aggregate({
       _sum: {
         size: true
@@ -32,8 +31,7 @@ export const imageRouter = createTRPCRouter({
     })
   }),
 
-  // TODO: private procedure
-  create: publicProcedure
+  create: privateProcedure
     .input(
       z.object({
         key: z.string().min(1),
@@ -51,8 +49,7 @@ export const imageRouter = createTRPCRouter({
       });
     }),
 
-  // TODO: private procedure
-  delete: publicProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+  delete: privateProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     const result = await utapi.deleteFiles(input);
     if (!result.success) {
       throw new TRPCError({
