@@ -7,17 +7,44 @@ import ReviewsTabContent from "./_components/ReviewsTabContent";
 import { api } from "@/trpc/server";
 import UpdatesTabContent from "./_components/UpdatesTabContent";
 import ImageChooser from "./_components/ImageChooser";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
+  const { isAuthenticated, getUser, getPermission } = getKindeServerSession();
+
+  if (!await isAuthenticated()) {
+    redirect("/api/auth/login?post_login_redirect_url=/dashboard")
+  }
+
+  const access = await getPermission("access:dashboard");
+
+  if (!access?.isGranted) {
+    return (
+      <main>
+        <div className="m-auto flex min-h-screen w-full flex-col items-center justify-center gap-4">
+          <p>Access to this page is restricted.</p>
+          <LogoutLink postLogoutRedirectURL="/">
+            <Button variant="destructive">Logout</Button>
+          </LogoutLink>
+        </div>
+      </main>
+    );
+  }
+
+  const user = await getUser();
+
   const reviews = await api.review.getAll.query();
   const updates = await api.update.getAll.query();
   const images = await api.image.getAll.query();
 
   return (
     <>
-      <DashboardNavbar userEmail="test@gmail.com" />
+      <DashboardNavbar userEmail={user?.email ?? ""} />
       <div className="mx-auto max-w-7xl px-12 pt-12">
         <Tabs defaultValue="updates">
           <TabsList>
@@ -65,16 +92,20 @@ async function DashboardNavbar(props: { userEmail: string }) {
       <div className="flex w-full items-center justify-center border-b border-border p-2 px-4">
         <div className="flex w-full max-w-7xl items-center justify-between">
           <div className="flex items-center justify-center gap-4">
-            <Button size="sm" variant="outline">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <p className="text-lg min-w-0">Dashboard</p>
+            <Link href="/">
+              <Button size="sm" variant="outline">
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </Link>
+            <p className="min-w-0 text-lg">Dashboard</p>
           </div>
           <div className="flex items-center justify-center gap-2">
             <p>{props.userEmail}</p>
-            <Button variant="outline" size="sm">
-              Logout
-            </Button>
+            <LogoutLink postLogoutRedirectURL="/">
+              <Button variant="outline" size="sm">
+                Logout
+              </Button>
+            </LogoutLink>
             <ThemeToggle size="sm" />
           </div>
         </div>
