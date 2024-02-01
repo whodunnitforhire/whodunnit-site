@@ -14,6 +14,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Rating from "@/components/Rating";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ export default function Home() {
       <main className="mx-auto flex max-w-6xl flex-col items-center gap-20 pb-36 pt-12 sm:gap-32">
         <SplashSection />
         <UpdatesSection />
+        <ReviewSection />
       </main>
     </>
   );
@@ -117,6 +119,25 @@ async function UpdatesSection() {
         <CarouselPrevious className="translate-x-7 rounded-md xl:translate-x-0" />
         <CarouselNext className="-translate-x-7 rounded-md xl:translate-x-0" />
       </Carousel>
+    </div>
+  );
+}
+
+async function ReviewSection() {
+  const reviews = await api.review.getAll.query();
+
+  const reviewCards = reviews.map(review => (
+    <div key={review.id} className="w-full space-y-4">
+      <Rating count={review.rating} />
+      <p className="text-sm sm:text-base">{`"${review.content}"`}</p>
+      <p className="text-lg text-primary font-baskervville font-semibold">{`— ${review.author}`}</p>
+    </div>
+  ))
+
+  return (
+    <div className="container flex flex-col items-center gap-6">
+      <SectionHeader value="reviews" />
+      <div className="grid grid-cols-1 md:grid-cols-3 w-full gap-8 md:gap-16">{reviewCards}</div>
     </div>
   );
 }
