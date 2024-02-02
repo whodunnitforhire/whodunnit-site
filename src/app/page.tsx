@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/carousel";
 import Rating from "@/components/Rating";
 import TextCollapser from "@/components/TextCollapser";
+import { Calendar, Phone } from "lucide-react";
+import CallNowDialog from "./_components/CallNowDialog";
 
 export const dynamic = "force-dynamic";
 
@@ -36,13 +38,29 @@ function Navbar() {
   return (
     <nav className="fixed top-0 z-50 flex h-12 w-full items-center justify-center border-b border-border bg-background bg-opacity-95 p-2 px-4 2xl:px-16">
       <div className="flex w-full items-center justify-between">
-        <div className="flex items-center justify-center gap-4">
-          <p className="min-w-0 font-baskervville text-xl">
+        <div className="flex items-center justify-center">
+          <ThemeToggle size="sm" variant="link" className="sm:hidden text-foreground p-0 pr-1" />
+          <p className="min-w-0 font-baskervville text-xl overflow-hidden text-nowrap sm:pl-4">
             Whodunnit for Hire
           </p>
         </div>
-        <div className="flex items-center justify-center gap-2">
-          <ThemeToggle size="sm" variant="ghost" />
+        <div className="flex items-center justify-center gap-0 sm:gap-2">
+          <CallNowDialog>
+            <Button variant="ghost" size="sm" className="space-x-2">
+              <Phone className="h-4 w-4" />
+              <span className="hidden sm:inline">Contact</span>
+            </Button>
+          </CallNowDialog>
+          <Link
+            href="https://whodunnit-for-hire.eventbrite.com/"
+            target="_blank"
+          >
+            <Button variant="ghost" size="sm" className="space-x-2">
+              <Calendar className="h-4 w-4" />
+              <span className="hidden sm:inline">Events</span>
+            </Button>
+          </Link>
+          <ThemeToggle size="sm" variant="ghost" className="hidden sm:inline" />
         </div>
       </div>
     </nav>
@@ -51,7 +69,7 @@ function Navbar() {
 
 function SplashSection() {
   return (
-    <div className="container flex flex-col-reverse items-center gap-12 p-0 sm:flex-col sm:px-8 sm:pt-24">
+    <div className="container flex flex-col-reverse items-center gap-20 sm:gap-12 p-0 sm:flex-col sm:px-8 sm:pt-24">
       <div className="flex flex-col items-center gap-6 px-8">
         <h1 className="text-center font-baskervville text-3xl font-bold leading-none text-primary dark:text-foreground sm:text-6xl">
           Whodunnit for Hire
@@ -60,9 +78,14 @@ function SplashSection() {
           Murder Mystery Entertainment | Headquartered in Maryland
         </p>
         <div>
-          <Link href={"tel:+1-410-549-2722"}>
-            <Button>Call Now</Button>
+          <Link href={"tel:+1-410-549-2722"} className="sm:hidden">
+            <Button size="lg">Call Now</Button>
           </Link>
+          <div className="hidden sm:inline-block">
+            <CallNowDialog>
+              <Button size="lg">Call Now</Button>
+            </CallNowDialog>
+          </div>
         </div>
       </div>
       <div className="relative w-full">
@@ -82,7 +105,7 @@ async function UpdatesSection() {
   const updates = await api.update.getAll.query();
 
   const updateCards = updates.map((update) => (
-    <CarouselItem key={update.id} className="md:basis-1/2 lg:basis-1/3">
+    <CarouselItem key={update.id} className="sm:basis-1/2 lg:basis-1/3">
       <Card className="flex h-full flex-col">
         <AspectRatio ratio={2 / 1}>
           <ImageLoader
@@ -130,8 +153,14 @@ async function ReviewSection() {
   const reviewCards = reviews.map(review => (
     <div key={review.id} className="w-full space-y-2 sm:space-y-4">
       <Rating count={review.rating} />
-      <div className="text-sm sm:text-base">
+      <div className="text-sm sm:text-base sm:hidden">
+        <TextCollapser value={review.content} maxChars={250} />
+      </div>
+      <div className="text-sm sm:text-base hidden sm:inline-block md:hidden">
         <TextCollapser value={review.content} maxChars={500} />
+      </div>
+      <div className="text-sm sm:text-base hidden md:inline-block">
+        <TextCollapser value={review.content} maxChars={600} />
       </div>
       <p className="text-lg text-primary font-baskervville font-semibold">{`— ${review.author}`}</p>
     </div>
@@ -140,7 +169,7 @@ async function ReviewSection() {
   return (
     <div className="container flex flex-col items-center gap-6">
       <SectionHeader value="reviews" />
-      <div className="grid grid-cols-1 md:grid-cols-3 w-full gap-8 md:gap-16">{reviewCards}</div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 w-full gap-8 md:gap-16">{reviewCards}</div>
     </div>
   );
 }
