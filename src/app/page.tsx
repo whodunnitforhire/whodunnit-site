@@ -18,6 +18,7 @@ import Rating from "@/components/Rating";
 import TextCollapser from "@/components/TextCollapser";
 import { Calendar, Phone } from "lucide-react";
 import CallNowDialog from "./_components/CallNowDialog";
+import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
 
@@ -25,10 +26,11 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto flex max-w-6xl flex-col items-center gap-20 pb-36 pt-12 sm:gap-32">
+      <main className="mx-auto flex max-w-6xl flex-col items-center gap-20 pt-12 sm:gap-32">
         <SplashSection />
         <UpdatesSection />
         <ReviewSection />
+        <Footer />
       </main>
     </>
   );
@@ -65,6 +67,18 @@ function Navbar() {
       </div>
     </nav>
   );
+}
+
+function Footer() {
+  const year = new Date().getFullYear();
+  return (
+    <footer className="text-muted-foreground w-full pb-8 sm:pb-24 sm:pt-24 px-8">
+      <Separator />
+      <div className="pt-8 sm:pt-12 text-sm sm:text-base opacity-50 flex flex-col items-center gap-4">
+        <p className="text-center">{`© ${year} Whodunnit for Hire, LLC | All rights reserved.`}</p>
+      </div>
+    </footer>
+  )
 }
 
 function SplashSection() {
