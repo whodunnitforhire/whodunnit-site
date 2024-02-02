@@ -19,6 +19,7 @@ import TextCollapser from "@/components/TextCollapser";
 import { Calendar, Phone } from "lucide-react";
 import CallNowDialog from "./_components/CallNowDialog";
 import { Separator } from "@/components/ui/separator";
+import DashboardButton from "./_components/DashboardButton";
 
 export const dynamic = "force-dynamic";
 
@@ -41,8 +42,12 @@ function Navbar() {
     <nav className="fixed top-0 z-50 flex h-12 w-full items-center justify-center border-b border-border bg-background bg-opacity-95 p-2 px-4 2xl:px-16">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center justify-center">
-          <ThemeToggle size="sm" variant="link" className="sm:hidden text-foreground p-0 pr-1" />
-          <p className="min-w-0 font-baskervville text-xl overflow-hidden text-nowrap sm:pl-4">
+          <ThemeToggle
+            size="sm"
+            variant="link"
+            className="p-0 pr-1 text-foreground sm:hidden"
+          />
+          <p className="min-w-0 overflow-hidden text-nowrap font-baskervville text-xl sm:pl-4">
             Whodunnit for Hire
           </p>
         </div>
@@ -62,6 +67,7 @@ function Navbar() {
               <span className="hidden sm:inline">Events</span>
             </Button>
           </Link>
+          <DashboardButton />
           <ThemeToggle size="sm" variant="ghost" className="hidden sm:inline" />
         </div>
       </div>
