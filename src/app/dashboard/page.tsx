@@ -1,6 +1,6 @@
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 import ReviewsTabContent from "./_components/ReviewsTabContent";
@@ -11,6 +11,7 @@ import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import AboutTabContent from "./_components/AboutTabContent";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +50,7 @@ export default async function Dashboard() {
         <Tabs defaultValue="updates">
           <TabsList>
             <TabsTrigger value="updates">Updates</TabsTrigger>
+            <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="reviews">Reviews</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
             <TabsTrigger value="images">Images</TabsTrigger>
@@ -56,32 +58,24 @@ export default async function Dashboard() {
           <TabsContent value="updates">
             <UpdatesTabContent initialUpdates={updates} />
           </TabsContent>
+          <TabsContent value="products">
+            <Card>
+              <CardHeader>
+                <CardTitle>Products</CardTitle>
+              </CardHeader>
+            </Card>
+          </TabsContent>
           <TabsContent value="reviews">
             <ReviewsTabContent intialReviews={reviews} />
           </TabsContent>
           <TabsContent value="about">
-            <Card>
-              <CardHeader>
-                <CardTitle>About</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <AboutTabContent />
-              </CardContent>
-            </Card>
+            <AboutTabContent />
           </TabsContent>
           <TabsContent value="images">
             <ImageChooser initialImages={images} />
           </TabsContent>
         </Tabs>
       </div>
-    </>
-  );
-}
-
-function AboutTabContent() {
-  return (
-    <>
-      <p>About content</p>
     </>
   );
 }

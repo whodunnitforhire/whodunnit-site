@@ -15,6 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Rating from "@/components/Rating";
+import TextCollapser from "@/components/TextCollapser";
 
 export const dynamic = "force-dynamic";
 
@@ -127,9 +128,11 @@ async function ReviewSection() {
   const reviews = await api.review.getAll.query();
 
   const reviewCards = reviews.map(review => (
-    <div key={review.id} className="w-full space-y-4">
+    <div key={review.id} className="w-full space-y-2 sm:space-y-4">
       <Rating count={review.rating} />
-      <p className="text-sm sm:text-base">{`"${review.content}"`}</p>
+      <div className="text-sm sm:text-base">
+        <TextCollapser value={review.content} maxChars={500} />
+      </div>
       <p className="text-lg text-primary font-baskervville font-semibold">{`— ${review.author}`}</p>
     </div>
   ))
