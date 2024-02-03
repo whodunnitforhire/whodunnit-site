@@ -78,18 +78,18 @@ function Navbar() {
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="text-muted-foreground w-full pb-8 sm:pb-24 sm:pt-24 px-8">
+    <footer className="w-full px-8 pb-8 text-muted-foreground sm:pb-24 sm:pt-24">
       <Separator />
-      <div className="pt-8 sm:pt-12 text-sm sm:text-base opacity-50 flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 pt-8 text-sm opacity-50 sm:pt-12 sm:text-base">
         <p className="text-center">{`© ${year} Whodunnit for Hire, LLC | All rights reserved.`}</p>
       </div>
     </footer>
-  )
+  );
 }
 
 function SplashSection() {
   return (
-    <div className="container flex flex-col-reverse items-center gap-20 sm:gap-12 p-0 sm:flex-col sm:px-8 sm:pt-24">
+    <div className="container flex flex-col-reverse items-center gap-20 p-0 sm:flex-col sm:gap-12 sm:px-8 sm:pt-24">
       <div className="flex flex-col items-center gap-6 px-8">
         <h1 className="text-center font-baskervville text-3xl font-bold leading-none text-primary dark:text-foreground sm:text-6xl">
           Whodunnit for Hire
@@ -143,7 +143,11 @@ async function UpdatesSection() {
             <p className="text-sm text-muted-foreground sm:text-base">
               {update.caption}
             </p>
-            <p className="text-sm sm:text-base">{update.content}</p>
+            <TextCollapser
+              className="text-sm sm:text-base"
+              value={update.content}
+              maxChars={550}
+            />
           </div>
           <div>
             <Link href={update.buttonLink} target="_blank">
@@ -170,26 +174,29 @@ async function UpdatesSection() {
 async function ReviewSection() {
   const reviews = await api.review.getAll.query();
 
-  const reviewCards = reviews.map(review => (
+  const reviewCards = reviews.map((review) => (
     <div key={review.id} className="w-full space-y-2 sm:space-y-4">
       <Rating count={review.rating} />
-      <div className="text-sm sm:text-base sm:hidden">
-        <TextCollapser value={review.content} maxChars={250} />
-      </div>
-      <div className="text-sm sm:text-base hidden sm:inline-block md:hidden">
-        <TextCollapser value={review.content} maxChars={500} />
-      </div>
-      <div className="text-sm sm:text-base hidden md:inline-block">
-        <TextCollapser value={review.content} maxChars={600} />
-      </div>
-      <p className="text-lg text-primary font-baskervville font-semibold">{`— ${review.author}`}</p>
+      <TextCollapser
+        className="text-sm sm:hidden sm:text-base"
+        value={review.content}
+        maxChars={400}
+      />
+      <TextCollapser
+        className="hidden text-sm sm:text-base sm:inline-block"
+        value={review.content}
+        maxChars={650}
+      />
+      <p className="font-baskervville text-lg font-semibold text-primary">{`— ${review.author}`}</p>
     </div>
-  ))
+  ));
 
   return (
     <div className="container flex flex-col items-center gap-6">
       <SectionHeader value="reviews" />
-      <div className="grid grid-cols-1 lg:grid-cols-3 w-full gap-8 md:gap-16">{reviewCards}</div>
+      <div className="grid w-full grid-cols-1 gap-8 md:gap-16 lg:grid-cols-3">
+        {reviewCards}
+      </div>
     </div>
   );
 }
