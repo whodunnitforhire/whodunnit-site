@@ -54,9 +54,10 @@ model Update {
 }
 
 model Review {
-    id        String   @id @default(cuid())
-    updatedAt DateTime @updatedAt
-    rating    Int
-    content   String   @db.Text
-    author    String   @db.VarChar(255)
+    id         String   @id @default(cuid())
+    updatedAt  DateTime @updatedAt
+    rating     Int
+    datePosted DateTime @default(now())
+    content    String   @db.Text
+    author     String   @db.VarChar(255)
 }

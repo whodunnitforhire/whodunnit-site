@@ -20,6 +20,7 @@ import { Calendar, Phone } from "lucide-react";
 import CallNowDialog from "./_components/CallNowDialog";
 import { Separator } from "@/components/ui/separator";
 import DashboardButton from "./_components/DashboardButton";
+import RelativeTime from "@yaireo/relative-time";
 
 export const dynamic = "force-dynamic";
 
@@ -173,23 +174,30 @@ async function UpdatesSection() {
 
 async function ReviewSection() {
   const reviews = await api.review.getAll.query();
+  const relativeTime = new RelativeTime();
 
-  const reviewCards = reviews.map((review) => (
-    <div key={review.id} className="w-full space-y-2 sm:space-y-4">
-      <Rating count={review.rating} />
-      <TextCollapser
-        className="text-sm sm:hidden sm:text-base"
-        value={review.content}
-        maxChars={400}
-      />
-      <TextCollapser
-        className="hidden text-sm sm:text-base sm:inline-block"
-        value={review.content}
-        maxChars={650}
-      />
-      <p className="font-baskervville text-lg font-semibold text-primary">{`— ${review.author}`}</p>
-    </div>
-  ));
+  const reviewCards = reviews.map((review) => {
+    const timeSincePost = relativeTime.from(review.datePosted)
+    return (
+      <div key={review.id} className="w-full space-y-2 sm:space-y-4">
+        <div className="flex gap-4 items-center">
+          <Rating count={review.rating} />
+          <p className="text-muted-foreground text-sm sm:text-base">{timeSincePost}</p>
+        </div>
+        <TextCollapser
+          className="text-sm sm:hidden sm:text-base"
+          value={review.content}
+          maxChars={400}
+        />
+        <TextCollapser
+          className="hidden text-sm sm:inline-block sm:text-base"
+          value={review.content}
+          maxChars={650}
+        />
+        <p className="font-baskervville text-lg font-semibold text-primary">{`— ${review.author}`}</p>
+      </div>
+    );
+  });
 
   return (
     <div className="container flex flex-col items-center gap-6">

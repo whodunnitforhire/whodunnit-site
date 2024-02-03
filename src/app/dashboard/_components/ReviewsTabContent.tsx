@@ -6,10 +6,11 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/trpc/react";
 import { type RouterOutputs } from "@/trpc/shared";
-import { Edit, Loader2, ScanSearch } from "lucide-react";
+import { CalendarIcon, Edit, Loader2, ScanSearch } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import RelativeTime from '@yaireo/relative-time'
 import {
   Form,
   FormControl,
@@ -22,10 +23,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 type ReviewsTabContentProps = {
   intialReviews: RouterOutputs["review"]["getAll"];
-}
+};
 
 export default function ReviewsTabContent(props: ReviewsTabContentProps) {
   const { data: reviews } = api.review.getAll.useQuery(undefined, {
@@ -69,9 +78,12 @@ export default function ReviewsTabContent(props: ReviewsTabContentProps) {
 function ReviewView(props: {
   review: RouterOutputs["review"]["getAll"][number];
 }) {
+  const relativeTime = new RelativeTime();
+  const date = relativeTime.from(props.review.datePosted)
   return (
     <Card className="items-start space-y-2 p-6">
       <p className="text-lg font-medium">{props.review.author}</p>
+      <p className="text-muted-foreground">{date}</p>
       <Rating count={props.review.rating} />
       <p>{props.review.content}</p>
     </Card>
@@ -82,6 +94,7 @@ const reviewFormSchema = z.object({
   author: z.string().min(1).max(255),
   rating: z.coerce.number().min(1).max(5),
   content: z.string().min(1),
+  datePosted: z.date(),
 });
 
 // TODO: make user unable to switch back to view from edit while applying changes
@@ -94,6 +107,7 @@ function ReviewEdit(props: {
       author: props.review.author,
       rating: props.review.rating,
       content: props.review.content,
+      datePosted: props.review.datePosted,
     },
   });
 
@@ -123,6 +137,7 @@ function ReviewEdit(props: {
       author: values.author,
       rating: values.rating,
       content: values.content,
+      datePosted: values.datePosted,
     });
   }
 
@@ -139,6 +154,47 @@ function ReviewEdit(props: {
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="datePosted"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Date Posted</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
                 <FormMessage />
               </FormItem>
             )}
