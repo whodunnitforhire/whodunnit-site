@@ -1,6 +1,5 @@
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReviewsTabContent from "./_components/ReviewsTabContent";
 import { api } from "@/trpc/server";
@@ -11,6 +10,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import AboutTabContent from "./_components/AboutTabContent";
 import BackButton from "./_components/BackButton";
+import ProductsTabContent from "./_components/ProductsTabContent";
 
 export const dynamic = "force-dynamic";
 
@@ -40,12 +40,13 @@ export default async function Dashboard() {
 
   const reviews = await api.review.getAll.query();
   const updates = await api.update.getAll.query();
+  const products = await api.product.getAll.query();
   const images = await api.image.getAll.query();
 
   return (
     <>
       <DashboardNavbar userEmail={user?.email ?? ""} />
-      <div className="mx-auto max-w-7xl px-12 pt-12">
+      <div className="mx-auto max-w-7xl p-12">
         <Tabs defaultValue="updates">
           <TabsList>
             <TabsTrigger value="updates">Updates</TabsTrigger>
@@ -58,11 +59,7 @@ export default async function Dashboard() {
             <UpdatesTabContent initialUpdates={updates} />
           </TabsContent>
           <TabsContent value="products">
-            <Card>
-              <CardHeader>
-                <CardTitle>Products</CardTitle>
-              </CardHeader>
-            </Card>
+            <ProductsTabContent initialProducts={products} />
           </TabsContent>
           <TabsContent value="reviews">
             <ReviewsTabContent intialReviews={reviews} />

@@ -28,7 +28,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import TextCollapser from "@/components/TextCollapser";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { PopoverDialog, PopoverDialogContent, PopoverDialogTrigger } from "@/components/ui/popover-dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 type ReviewsTabContentProps = {
   intialReviews: RouterOutputs["review"]["getAll"];
@@ -48,7 +48,7 @@ export default function ReviewsTabContent(props: ReviewsTabContentProps) {
         <h1 className="text-3xl font-medium">Reviews</h1>
       </div>
       <Separator />
-      <div className="grid grid-cols-1 gap-4 pt-4 pb-12 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 pt-4 lg:grid-cols-3">
         {reviews?.map((review) => {
           return <ReviewView key={review.id} review={{ ...review }} />;
         })}
@@ -165,8 +165,8 @@ function ReviewEditDialog(props: {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Date Posted</FormLabel>
-                  <PopoverDialog>
-                    <PopoverDialogTrigger asChild>
+                  <Popover modal>
+                    <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant={"outline"}
@@ -183,8 +183,8 @@ function ReviewEditDialog(props: {
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
-                    </PopoverDialogTrigger>
-                    <PopoverDialogContent className="w-auto p-0" align="start">
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
                         selected={field.value}
@@ -194,8 +194,8 @@ function ReviewEditDialog(props: {
                         }
                         initialFocus
                       />
-                    </PopoverDialogContent>
-                  </PopoverDialog>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
@@ -226,8 +226,7 @@ function ReviewEditDialog(props: {
                 </FormItem>
               )}
             />
-            <Separator />
-            <div className="container flex items-center justify-center gap-4">
+            <div className="container flex items-center pt-2 justify-center gap-4">
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

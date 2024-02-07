@@ -49,12 +49,12 @@ export default function UpdatesTabContent(props: UpdatesTabContentProps) {
         <UpdateEditDialog>
           <Button>
             <PlusSquare className="h-6 w-6 pr-2" />
-            <span>New post</span>
+            <span>New update</span>
           </Button>
         </UpdateEditDialog>
       </div>
       <Separator />
-      <div className="grid auto-rows-fr grid-cols-1 gap-4 break-words pb-12 pt-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid auto-rows-fr grid-cols-1 gap-4 break-words pt-4 md:grid-cols-2 lg:grid-cols-3">
         {updates?.map((update) => {
           return <UpdateView key={update.id} update={{ ...update }} />;
         })}
