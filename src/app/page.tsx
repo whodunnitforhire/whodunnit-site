@@ -32,6 +32,7 @@ export default function Home() {
         <SplashSection />
         <UpdatesSection />
         <ReviewSection />
+        <ProductsSection />
         <Footer />
       </main>
     </>
@@ -138,7 +139,7 @@ async function UpdatesSection() {
         </AspectRatio>
         <CardContent className="flex grow flex-col justify-between gap-4 p-4">
           <div className="grow space-y-2 sm:space-y-4">
-            <h3 className="font-baskervville text-lg font-semibold leading-normal sm:text-2xl">
+            <h3 className="text-lg font-semibold leading-normal sm:text-xl">
               {update.title}
             </h3>
             <p className="text-sm text-muted-foreground sm:text-base">
@@ -147,7 +148,7 @@ async function UpdatesSection() {
             <TextCollapser
               className="text-sm sm:text-base"
               value={update.content}
-              maxChars={550}
+              maxChars={450}
             />
           </div>
           <div>
@@ -192,7 +193,7 @@ async function ReviewSection() {
         <TextCollapser
           className="hidden text-sm sm:inline-block sm:text-base"
           value={review.content}
-          maxChars={650}
+          maxChars={550}
         />
         <p className="font-baskervville text-lg font-semibold text-primary">{`— ${review.author}`}</p>
       </div>
@@ -202,9 +203,45 @@ async function ReviewSection() {
   return (
     <div className="container flex flex-col items-center gap-6">
       <SectionHeader value="reviews" />
+      <div className="flex">
+        <Link href="https://search.google.com/local/writereview?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw" target="_blank">
+          <Button variant="link">Write a Review</Button>
+        </Link>
+        <Link href="https://search.google.com/local/reviews?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw" target="_blank">
+          <Button variant="link">Read More</Button>
+        </Link>
+      </div>
       <div className="grid w-full grid-cols-1 gap-8 md:gap-16 lg:grid-cols-3">
         {reviewCards}
       </div>
     </div>
   );
+}
+
+async function ProductsSection() {
+  const products = await api.product.getAll.query();
+
+  const productCards = products.map((product) => (
+    <div key={product.id}>
+      <AspectRatio ratio={3 / 2}>
+        <ImageLoader
+          src={product.image.url}
+          alt="Update cover image"
+          className="rounded-md border object-cover"
+          fill
+        />
+      </AspectRatio>
+      <h3 className="line-clamp-1 pt-2">{product.title}</h3>
+      <p className="text-muted-foreground">{product.caption}</p>
+    </div>
+  ));
+
+  return (
+    <div className="container flex flex-col items-center gap-6">
+      <SectionHeader value="products" />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-4 md:gap-6">
+        {productCards}
+      </div>
+    </div>
+  )
 }

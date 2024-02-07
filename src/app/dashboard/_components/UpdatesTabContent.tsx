@@ -56,7 +56,7 @@ export default function UpdatesTabContent(props: UpdatesTabContentProps) {
       <Separator />
       <div className="grid auto-rows-fr grid-cols-1 gap-4 break-words pt-4 md:grid-cols-2 lg:grid-cols-3">
         {updates?.map((update) => {
-          return <UpdateView key={update.id} update={{ ...update }} />;
+          return <UpdateView key={update.id}update={{ ...update }} />;
         })}
       </div>
     </div>
@@ -66,7 +66,7 @@ export default function UpdatesTabContent(props: UpdatesTabContentProps) {
 function UpdateView(props: {
   update: RouterOutputs["update"]["getAll"][number];
 }) {
-  const includeShowMore = props.update.content.length > 300;
+  const includeShowMore = props.update.content.length > 200;
   return (
     <div className="relative">
       <Card className="flex h-full flex-col">
@@ -94,7 +94,7 @@ function UpdateView(props: {
           </div>
           {includeShowMore ? (
             <p>
-              {`${props.update.content.substring(0, 300)}... `}
+              {`${props.update.content.substring(0, 200)}... `}
               <Dialog>
                 <DialogTrigger className="text-primary">
                   Show more
@@ -114,7 +114,7 @@ function UpdateView(props: {
           )}
           <div className="container flex grow items-end justify-center">
             <Link href={props.update.buttonLink} target="_blank">
-              <Button variant="outline">{props.update.buttonName}</Button>
+              <Button variant="ghost">{props.update.buttonName}</Button>
             </Link>
           </div>
         </CardContent>
