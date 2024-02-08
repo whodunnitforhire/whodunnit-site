@@ -11,7 +11,7 @@ export const imageRouter = createTRPCRouter({
     return ctx.db.image.findMany({
       orderBy: {
         createdAt: "desc",
-      }
+      },
     });
   }),
 
@@ -22,13 +22,13 @@ export const imageRouter = createTRPCRouter({
       },
     }));
   }),
-  
+
   getSizeAll: privateProcedure.query(async ({ ctx }) => {
     return ctx.db.image.aggregate({
       _sum: {
-        size: true
-      }
-    })
+        size: true,
+      },
+    });
   }),
 
   create: privateProcedure
@@ -49,18 +49,53 @@ export const imageRouter = createTRPCRouter({
       });
     }),
 
-  delete: privateProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
-    const result = await utapi.deleteFiles(input);
-    if (!result.success) {
-      throw new TRPCError({
-        message: "Failed to delete files",
-        code: "INTERNAL_SERVER_ERROR",
+  delete: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const result = await utapi.deleteFiles(input.id);
+      if (!result.success) {
+        throw new TRPCError({
+          message: "Failed to delete files",
+          code: "INTERNAL_SERVER_ERROR",
+        });
+      }
+      return ctx.db.image.delete({
+        where: {
+          id: input.id,
+        },
       });
-    }
-    return ctx.db.image.delete({
-      where: {
-        id: input,
-      },
-    });
-  }),
+    }),
+
+  // optionally delete given image, and prune all images not being used by an Update or Product
+  prune: privateProcedure
+    .input(z.optional(z.object({ id: z.string() })))
+    .mutation(async ({ ctx, input }) => {
+      const unusedImages = await ctx.db.image.findMany({
+        where: {
+          NOT: {
+            OR: [{ updates: { some: {} } }, { Product: { some: {} } }],
+          },
+        },
+      });
+      const unusedIds = unusedImages.map((i) => i.id);
+      if (input) {
+        unusedIds.push(input?.id);
+      }
+      if (unusedIds.length > 0) {
+        const result = await utapi.deleteFiles(unusedIds);
+        if (!result.success) {
+          throw new TRPCError({
+            message: "Failed to delete files",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+      }
+      return ctx.db.image.deleteMany({
+        where: {
+          id: {
+            in: unusedIds,
+          },
+        },
+      });
+    }),
 });

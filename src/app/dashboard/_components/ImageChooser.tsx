@@ -135,7 +135,7 @@ export default function ImageChooser(props: {
                       <>
                         <Button
                           variant="destructive"
-                          onClick={() => deleteImage.mutate(image.id)}
+                          onClick={() => deleteImage.mutate({ id: image.id })}
                         >
                           Delete
                         </Button>
