@@ -32,6 +32,7 @@ export default function Home() {
       <main className="mx-auto flex max-w-6xl flex-col items-center gap-20 pt-12 sm:gap-32">
         <SplashSection />
         <UpdatesSection />
+        <AboutSection />
         <ReviewSection />
         <ProductsSection />
         <Footer />
@@ -172,6 +173,30 @@ async function UpdatesSection() {
         <CarouselPrevious className="translate-x-7 rounded-md xl:translate-x-0" />
         <CarouselNext className="-translate-x-7 rounded-md xl:translate-x-0" />
       </Carousel>
+    </div>
+  );
+}
+
+async function AboutSection() {
+  const about = await api.about.get.query();
+
+  // const processedContent = about.content
+  //   .replace(/(?:<p>|<div>|<h[1-6]>|<\/p>|<\/div>|<\/h[1-6]>)/g, "\n$&\n")
+  //   .split("\n")
+  //   .map((line) => (line.trim() === "" ? "<br>" : line))
+  //   .join("")
+  //   .replace(/<br><\/(p|div|h[1-6])>/g, "</$1><br>")
+  //   .replace(/\n/g, ""); 
+
+  return (
+    <div className="md:px-8">
+      <div className="container flex flex-col items-center gap-6 bg-card px-4 py-24 md:px-8">
+        <SectionHeader value="murder mystery entertainment company" />
+        <div
+          className="editor w-full space-y-6 text-left text-sm sm:text-base"
+          dangerouslySetInnerHTML={{ __html: about.content }}
+        />
+      </div>
     </div>
   );
 }

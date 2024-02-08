@@ -73,7 +73,7 @@
 }
 
 .editor p {
-  @apply text-base leading-relaxed;
+  @apply leading-relaxed;
 }
 
 .editor h1 {
@@ -97,7 +97,7 @@
 }
 
 .editor blockquote {
-  @apply border-l-4 border-gray-200 pl-4 italic text-gray-600 mb-4;
+  @apply border-l-4 border-foreground pl-4 italic text-muted-foreground mb-4;
 }
 
 .editor a {
