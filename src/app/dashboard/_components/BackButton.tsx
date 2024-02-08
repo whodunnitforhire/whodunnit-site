@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { Home, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ export default function BackButton() {
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
-          <ArrowLeft className="h-4 w-4" />
+          <Home className="h-4 w-4" />
         )}
       </Button>
     </Link>

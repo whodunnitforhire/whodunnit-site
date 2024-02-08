@@ -7,6 +7,7 @@ import { api } from "@/trpc/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
@@ -111,12 +112,13 @@ function SplashSection() {
         </div>
       </div>
       <div className="relative w-full">
-        <ImageLoader
+        <Image
           src={coverImage}
           alt="Cover image"
           className="object-cover sm:rounded-md sm:border"
           width={1080}
           height={608}
+          priority={true}
         />
       </div>
     </div>
@@ -135,6 +137,7 @@ async function UpdatesSection() {
             alt="Update cover image"
             fill
             className="rounded-t-md object-cover"
+            sizes="(min-width: 1280px) 348px, (min-width: 1040px) calc(16.82vw + 136px), (min-width: 640px) calc(50vw - 44px), calc(100vw - 68px)"
           />
         </AspectRatio>
         <CardContent className="flex grow flex-col justify-between gap-4 p-4">
@@ -229,6 +232,7 @@ async function ProductsSection() {
           alt="Update cover image"
           className="rounded-md border object-cover"
           fill
+          sizes="(min-width: 1260px) 252px, (min-width: 1040px) calc(14vw + 78px), (min-width: 780px) calc(33.33vw - 39px), calc(50vw - 42px)"
         />
       </AspectRatio>
       <h3 className="line-clamp-1 pt-2">{product.title}</h3>

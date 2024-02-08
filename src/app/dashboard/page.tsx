@@ -42,6 +42,7 @@ export default async function Dashboard() {
   const updates = await api.update.getAll.query();
   const products = await api.product.getAll.query();
   const images = await api.image.getAll.query();
+  const about = await api.about.get.query();
 
   return (
     <>
@@ -65,7 +66,7 @@ export default async function Dashboard() {
             <ReviewsTabContent intialReviews={reviews} />
           </TabsContent>
           <TabsContent value="about">
-            <AboutTabContent />
+            <AboutTabContent initialAbout={about} />
           </TabsContent>
           <TabsContent value="images">
             <ImageChooser initialImages={images} />

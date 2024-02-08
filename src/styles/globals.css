@@ -57,3 +57,49 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Editor styling */
+
+.editor .ProseMirror {
+  @apply p-4
+}
+
+.ProseMirror:focus {
+  @apply outline-none
+}
+
+.editor {
+  @apply p-4;
+}
+
+.editor p {
+  @apply text-base leading-relaxed;
+}
+
+.editor h1 {
+  @apply text-3xl font-bold;
+}
+
+.editor h2 {
+  @apply text-2xl font-bold;
+}
+
+.editor h3 {
+  @apply text-xl font-semibold;
+}
+
+.editor ul {
+  @apply list-disc pl-5;
+}
+
+.editor ol {
+  @apply list-decimal pl-5;
+}
+
+.editor blockquote {
+  @apply border-l-4 border-gray-200 pl-4 italic text-gray-600 mb-4;
+}
+
+.editor a {
+  @apply text-primary hover:underline hover:cursor-pointer;
+}
