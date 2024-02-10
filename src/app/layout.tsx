@@ -49,6 +49,7 @@ export default function RootLayout({
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
             {children}
             <Toaster position="bottom-center" />
+            <Analytics />
           </ThemeProvider>
         </TRPCReactProvider>
         <Analytics />
