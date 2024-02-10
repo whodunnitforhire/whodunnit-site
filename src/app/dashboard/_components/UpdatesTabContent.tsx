@@ -264,7 +264,7 @@ export function UpdateEditDialog(props: {
             </div>
           )}
           <div className="space-y-2">
-            <p>Image</p>
+            <p>Image <span className="text-muted-foreground opacity-50">{"(2:1)"}</span></p>
             <ImageChooser
               initialImages={props.initialImages}
               handleChoice={setImage}

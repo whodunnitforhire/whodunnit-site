@@ -1,4 +1,3 @@
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReviewsTabContent from "./_components/ReviewsTabContent";
@@ -8,8 +7,9 @@ import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import AboutTabContent from "./_components/AboutTabContent";
-import BackButton from "./_components/BackButton";
 import ProductsTabContent from "./_components/ProductsTabContent";
+import ReturnToSiteButton from "./_components/ReturnToSiteButton";
+import NavOptions from "./_components/NavOptions";
 
 export const dynamic = "force-dynamic";
 
@@ -45,20 +45,31 @@ export default async function Dashboard() {
 
   return (
     <>
-      <DashboardNavbar userEmail={user?.email ?? ""} />
       <div className="mx-auto max-w-7xl p-12">
         <Tabs defaultValue="updates">
-          <TabsList>
-            <TabsTrigger value="updates">Updates</TabsTrigger>
-            <TabsTrigger value="products">Products</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews</TabsTrigger>
-            <TabsTrigger value="about">About</TabsTrigger>
-          </TabsList>
+          <div className="flex gap-4 items-center">
+            <ReturnToSiteButton variant="outline" />
+            <TabsList>
+              <TabsTrigger value="updates">Updates</TabsTrigger>
+              <TabsTrigger value="products">Products</TabsTrigger>
+              <TabsTrigger value="reviews">Reviews</TabsTrigger>
+              <TabsTrigger value="about">About</TabsTrigger>
+            </TabsList>
+            <div className="justify-end ml-auto">
+              <NavOptions variant="ghost" size="icon" email={user?.email ?? "Profile"} />
+            </div>
+          </div>
           <TabsContent value="updates">
-            <UpdatesTabContent initialUpdates={updates} initialImages={images} />
+            <UpdatesTabContent
+              initialUpdates={updates}
+              initialImages={images}
+            />
           </TabsContent>
           <TabsContent value="products">
-            <ProductsTabContent initialProducts={products} initialImages={images} />
+            <ProductsTabContent
+              initialProducts={products}
+              initialImages={images}
+            />
           </TabsContent>
           <TabsContent value="reviews">
             <ReviewsTabContent intialReviews={reviews} />
@@ -67,30 +78,6 @@ export default async function Dashboard() {
             <AboutTabContent initialAbout={about} />
           </TabsContent>
         </Tabs>
-      </div>
-    </>
-  );
-}
-
-async function DashboardNavbar(props: { userEmail: string }) {
-  return (
-    <>
-      <div className="flex w-full items-center justify-center border-b border-border p-2 px-4">
-        <div className="flex w-full max-w-7xl items-center justify-between">
-          <div className="flex items-center justify-center gap-4">
-            <BackButton />
-            <p className="min-w-0 text-lg">Dashboard</p>
-          </div>
-          <div className="flex items-center justify-center gap-2">
-            <p>{props.userEmail}</p>
-            <LogoutLink postLogoutRedirectURL="/">
-              <Button variant="outline" size="sm">
-                Logout
-              </Button>
-            </LogoutLink>
-            <ThemeToggle size="sm" />
-          </div>
-        </div>
       </div>
     </>
   );
