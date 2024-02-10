@@ -14,18 +14,10 @@ import { UploadButton } from "@/lib/uploadthing";
 import { type UploadFileResponse } from "uploadthing/client";
 import ImageLoader from "@/components/ImageLoader";
 
-// test
-export function ImageTabContent(props: {
-  initialImages: RouterOutputs["image"]["getAll"];
-}) {
-  return (
-    <ImageChooser initialImages={props.initialImages} handleChoice={(image) => console.log(image)} />
-  )
-}
-
 export default function ImageChooser(props: {
   initialImages: RouterOutputs["image"]["getAll"];
   handleChoice: (image: RouterOutputs["image"]["getAll"][number]) => void;
+  className?: string;
 }) {
   const { data: images } = api.image.getAll.useQuery(undefined, {
     initialData: props.initialImages,
@@ -38,14 +30,14 @@ export default function ImageChooser(props: {
   const [open, setOpen] = useState(false);
 
   function handleSelect(image: RouterOutputs["image"]["getAll"][number]) {
-    props.handleChoice(image)
-    setOpen(false)
+    props.handleChoice(image);
+    setOpen(false);
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button className="space-x-2">
+        <Button className={"space-x-2 " + props.className}>
           <FileImage className="h-5 w-5" />
           <span>Choose Image</span>
         </Button>
@@ -53,8 +45,13 @@ export default function ImageChooser(props: {
       <DialogContent className="sm:max-w- max-h-[95vh] rounded-md p-0">
         <div className="grid auto-rows-fr grid-cols-3 gap-3 overflow-x-clip overflow-y-scroll p-6">
           <GridItem className="col-span-3 flex items-center justify-center border-none">
-            <ImageUploader setLoading={setIsLoading} className={isLoading ? "scale-0" : ""} />
-            <Loader2 className={"animate-spin absolute " + (isLoading ? "" : "hidden")} />
+            <ImageUploader
+              setLoading={setIsLoading}
+              className={isLoading ? "scale-0" : ""}
+            />
+            <Loader2
+              className={"absolute animate-spin " + (isLoading ? "" : "hidden")}
+            />
           </GridItem>
           {images.map((img) => (
             <GridItem key={img.id} image={img} handleSelect={handleSelect} />
@@ -211,11 +208,12 @@ function DeleteDialog(props: { image: RouterOutputs["image"]["getAll"][number] }
               <Button
                 variant="destructive"
                 onClick={() => deleteImage.mutate({ id: props.image.id })}
+                disabled={isLoadingImage}
               >
                 Delete
               </Button>
               <DialogClose>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline" disabled={isLoadingImage}>Cancel</Button>
               </DialogClose>
             </>
           )}

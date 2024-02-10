@@ -29,9 +29,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuLab
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { type CheckedState } from "@radix-ui/react-checkbox";
+import ImageLoader from "@/components/ImageLoader";
+import ImageChooser from "./ImageChooser";
 
 type UpdatesTabContentProps = {
   initialUpdates: RouterOutputs["update"]["getAll"];
+  initialImages: RouterOutputs["image"]["getAll"];
 };
 
 export default function UpdatesTabContent(props: UpdatesTabContentProps) {
@@ -46,7 +49,7 @@ export default function UpdatesTabContent(props: UpdatesTabContentProps) {
     <div className="flex flex-col gap-4 pt-4">
       <div className="flex gap-4">
         <h1 className="text-3xl font-medium">Updates</h1>
-        <UpdateEditDialog>
+        <UpdateEditDialog initialImages={props.initialImages}>
           <Button>
             <PlusSquare className="h-6 w-6 pr-2" />
             <span>New update</span>
@@ -56,7 +59,7 @@ export default function UpdatesTabContent(props: UpdatesTabContentProps) {
       <Separator />
       <div className="grid auto-rows-fr grid-cols-1 gap-4 break-words pt-4 md:grid-cols-2 lg:grid-cols-3">
         {updates?.map((update) => {
-          return <UpdateView key={update.id}update={{ ...update }} />;
+          return <UpdateView key={update.id}update={{ ...update }} initialImages={props.initialImages} />;
         })}
       </div>
     </div>
@@ -65,12 +68,13 @@ export default function UpdatesTabContent(props: UpdatesTabContentProps) {
 
 function UpdateView(props: {
   update: RouterOutputs["update"]["getAll"][number];
+  initialImages: RouterOutputs["image"]["getAll"];
 }) {
   const includeShowMore = props.update.content.length > 200;
   return (
     <div className="relative">
       <Card className="flex h-full flex-col">
-        <UpdateEditDialog update={props.update}>
+        <UpdateEditDialog update={props.update} initialImages={props.initialImages}>
           <Button
             variant="outline"
             className="absolute right-4 top-4 z-50 space-x-2 shadow-md"
@@ -127,14 +131,20 @@ const updateFormSchema = z.object({
   title: z.string().min(1).max(255),
   caption: z.optional(z.string().max(255)),
   content: z.string().min(1),
-  imageId: z.string(),
   buttonName: z.string().min(1).max(255),
   buttonLink: z.string().min(1).max(2083),
 });
 
+
+
+// ===========================================================================
+// Update Editor
+// ===========================================================================
+
 export function UpdateEditDialog(props: {
   update?: RouterOutputs["update"]["getAll"][number];
   children: ReactNode;
+  initialImages: RouterOutputs["image"]["getAll"];
 }) {
   const form = useForm<z.infer<typeof updateFormSchema>>({
     resolver: zodResolver(updateFormSchema),
@@ -143,6 +153,9 @@ export function UpdateEditDialog(props: {
 
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [image, setImage] = useState<
+    RouterOutputs["image"]["getAll"][number] | undefined
+  >(!!props.update ? props.update.image : undefined);
 
   // set to true because checkbox is checked by default
   const [autoDeleteOld, setAutoDeleteOld] = useState<CheckedState>(true);
@@ -150,6 +163,7 @@ export function UpdateEditDialog(props: {
   function setOpenAndReset(toOpen: boolean) {
     if (toOpen) {
       form.reset({ ...props.update });
+      setImage(!!props.update ? props.update.image : undefined)
       setAutoDeleteOld(true)
     }
     setOpen(() => toOpen);
@@ -218,13 +232,17 @@ export function UpdateEditDialog(props: {
   })
 
   function onSubmit(values: z.infer<typeof updateFormSchema>) {
+    if (!image) {
+      toast.error("Error submitting form, image missing.")
+      return
+    }
     if (props.update) {
-      updateUpdate.mutate({ ...values, id: props.update.id });
+      updateUpdate.mutate({ ...values, imageId: image.id, id: props.update.id });
     } else {
       if (autoDeleteOld === true) {
         deleteOldestUpdates.mutate(8)
       }
-      createUpdate.mutate({ ...values });
+      createUpdate.mutate({ ...values, imageId: image.id });
     }
   }
 
@@ -232,21 +250,29 @@ export function UpdateEditDialog(props: {
     <Dialog open={open} onOpenChange={setOpenAndReset}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent>
+        <div className="flex gap-4">
+          {!!image && (
+            <div className="relative h-full w-24 rounded-md border">
+              <div className="h-full w-full">
+                <ImageLoader
+                  src={image.url}
+                  fill
+                  className="object-cover"
+                  alt="Chosen image"
+                />
+              </div>
+            </div>
+          )}
+          <div className="space-y-2">
+            <p>Image</p>
+            <ImageChooser
+              initialImages={props.initialImages}
+              handleChoice={setImage}
+            />
+          </div>
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="imageId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="title"
@@ -331,7 +357,7 @@ export function UpdateEditDialog(props: {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <>
-                  <Button type="submit" disabled={!open}>
+                  <Button type="submit" disabled={!open || !image}>
                     <Save className="mr-2 h-4 w-4" />
                     {submitButtonTitle}
                   </Button>

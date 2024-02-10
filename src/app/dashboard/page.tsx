@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReviewsTabContent from "./_components/ReviewsTabContent";
 import { api } from "@/trpc/server";
 import UpdatesTabContent from "./_components/UpdatesTabContent";
-import { ImageTabContent } from "./_components/ImageChooser";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
@@ -54,22 +53,18 @@ export default async function Dashboard() {
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="reviews">Reviews</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
-            <TabsTrigger value="images">Images</TabsTrigger>
           </TabsList>
           <TabsContent value="updates">
-            <UpdatesTabContent initialUpdates={updates} />
+            <UpdatesTabContent initialUpdates={updates} initialImages={images} />
           </TabsContent>
           <TabsContent value="products">
-            <ProductsTabContent initialProducts={products} />
+            <ProductsTabContent initialProducts={products} initialImages={images} />
           </TabsContent>
           <TabsContent value="reviews">
             <ReviewsTabContent intialReviews={reviews} />
           </TabsContent>
           <TabsContent value="about">
             <AboutTabContent initialAbout={about} />
-          </TabsContent>
-          <TabsContent value="images">
-            <ImageTabContent initialImages={images} />
           </TabsContent>
         </Tabs>
       </div>

@@ -31,9 +31,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import Image from "next/image";
+import ImageChooser from "./ImageChooser";
+import ImageLoader from "@/components/ImageLoader";
 
 export default function ProductsTabContent(props: {
   initialProducts: RouterOutputs["product"]["getAll"];
+  initialImages: RouterOutputs["image"]["getAll"];
 }) {
   const { data: products } = api.product.getAll.useQuery(undefined, {
     initialData: props.initialProducts,
@@ -46,7 +49,7 @@ export default function ProductsTabContent(props: {
     <div className="flex flex-col gap-4 pt-4">
       <div className="flex gap-4">
         <h1 className="text-3xl font-medium">Products</h1>
-        <ProductEditDialog>
+        <ProductEditDialog initialImages={props.initialImages}>
           <Button>
             <PlusSquare className="h-6 w-6 pr-2" />
             <span>New product</span>
@@ -56,7 +59,7 @@ export default function ProductsTabContent(props: {
       <Separator />
     <div className="grid auto-rows-fr grid-cols-1 gap-4 break-words pt-4 sm:grid-cols-3 lg:grid-cols-5">
         {products.map((product) => (
-          <ProductView key={product.id} product={product} />
+          <ProductView key={product.id} product={product} initialImages={props.initialImages} />
         ))}
       </div>
     </div>
@@ -65,10 +68,11 @@ export default function ProductsTabContent(props: {
 
 function ProductView(props: {
   product: RouterOutputs["product"]["getAll"][number];
+  initialImages: RouterOutputs["image"]["getAll"];
 }) {
   return (
     <Card className="relative">
-      <ProductEditDialog product={props.product}>
+      <ProductEditDialog product={props.product} initialImages={props.initialImages}>
         <Button variant="outline" size="icon" className="absolute z-50 right-2 top-2 shadow-md">
           <Edit className="h-4 w-4" />
         </Button>
@@ -94,11 +98,17 @@ function ProductView(props: {
 const productFormSchema = z.object({
   title: z.string().min(1).max(255),
   caption: z.optional(z.string().max(255)),
-  imageId: z.string(),
 });
+
+
+
+// ===========================================================================
+// Product Editor
+// ===========================================================================
 
 function ProductEditDialog(props: {
   product?: RouterOutputs["product"]["getAll"][number];
+  initialImages: RouterOutputs["image"]["getAll"];
   children: ReactNode;
 }) {
   const form = useForm<z.infer<typeof productFormSchema>>({
@@ -108,10 +118,14 @@ function ProductEditDialog(props: {
 
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [image, setImage] = useState<
+    RouterOutputs["image"]["getAll"][number] | undefined
+  >(!!props.product ? props.product.image : undefined);
 
   function setOpenAndReset(toOpen: boolean) {
     if (toOpen) {
       form.reset({ ...props.product });
+      setImage(!!props.product ? props.product.image : undefined)
     }
     setOpen(() => toOpen);
   }
@@ -172,10 +186,14 @@ function ProductEditDialog(props: {
   });
 
   function onSubmit(values: z.infer<typeof productFormSchema>) {
+    if (!image) {
+      toast.error("Error submitting form, image missing.")
+      return
+    };
     if (props.product) {
-      updateProduct.mutate({ ...values, id: props.product?.id });
+      updateProduct.mutate({ ...values, imageId: image.id, id: props.product?.id });
     } else {
-      createProduct.mutate({ ...values });
+      createProduct.mutate({ ...values, imageId: image.id });
     }
   }
 
@@ -183,21 +201,29 @@ function ProductEditDialog(props: {
     <Dialog open={open} onOpenChange={setOpenAndReset}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent>
+        <div className="flex gap-4">
+          {!!image && (
+            <div className="relative h-full w-24 rounded-md border">
+              <div className="h-full w-full">
+                <ImageLoader
+                  src={image.url}
+                  fill
+                  className="object-cover"
+                  alt="Chosen image"
+                />
+              </div>
+            </div>
+          )}
+          <div className="space-y-2">
+            <p>Image</p>
+            <ImageChooser
+              initialImages={props.initialImages}
+              handleChoice={setImage}
+            />
+          </div>
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="imageId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="title"
@@ -232,7 +258,7 @@ function ProductEditDialog(props: {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <>
-                  <Button type="submit" disabled={!open}>
+                  <Button type="submit" disabled={!open || !image}>
                     <Save className="mr-2 h-4 w-4" />
                     {submitButtonTitle}
                   </Button>
