@@ -129,6 +129,10 @@ function SplashSection() {
 async function UpdatesSection() {
   const updates = await api.update.getAll.query();
 
+  if (updates.length <= 0) {
+    return null;
+  }
+
   const updateCards = updates.map((update) => (
     <CarouselItem key={update.id} className="sm:basis-1/2 lg:basis-1/3">
       <Card className="flex h-full flex-col">
@@ -197,6 +201,10 @@ async function ReviewSection() {
   const reviews = await api.review.getAll.query();
   const relativeTime = new RelativeTime();
 
+  if (reviews.length <= 0) {
+    return null;
+  }
+
   const reviewCards = reviews.map((review) => {
     const timeSincePost = relativeTime.from(review.datePosted)
     return (
@@ -240,6 +248,10 @@ async function ReviewSection() {
 
 async function ProductsSection() {
   const products = await api.product.getAll.query();
+
+  if (products.length <= 0) {
+    return null;
+  }
 
   const productCards = products.map((product) => (
     <div key={product.id}>

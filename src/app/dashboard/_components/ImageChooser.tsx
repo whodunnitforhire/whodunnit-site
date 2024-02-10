@@ -45,7 +45,7 @@ export default function ImageChooser(props: {
       </DialogTrigger>
       <DialogContent className="sm:max-w- max-h-[95vh] rounded-md p-0">
         <OptionsMenu setLoading={setIsLoading} className="absolute left-6 top-10 z-50" disabled={isLoading} />
-        <div className="grid auto-rows-fr grid-cols-3 gap-3 overflow-x-clip overflow-y-scroll p-6">
+        <div className="grid auto-rows-fr grid-cols-3 gap-3 overflow-x-clip overflow-y-auto p-6">
           <GridItem className="col-span-3 flex items-center justify-center border-none">
             <ImageUploader
               setLoading={setIsLoading}
