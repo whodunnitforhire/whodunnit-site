@@ -52,10 +52,26 @@ export const imageRouter = createTRPCRouter({
   delete: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const imageInUse = await ctx.db.image.findUnique({
+        where: { id: input.id },
+        include: {
+          updates: true,
+          Product: true,
+        },
+      });
+      if (
+        imageInUse &&
+        (imageInUse.updates.length > 0 || imageInUse.Product.length > 0)
+      ) {
+        throw new TRPCError({
+          message: "Cannot delete image because it is currently in use",
+          code: "CONFLICT", 
+        });
+      }
       const result = await utapi.deleteFiles(input.id);
       if (!result.success) {
         throw new TRPCError({
-          message: "Failed to delete files",
+          message: "Image service provider failed to delete images.",
           code: "INTERNAL_SERVER_ERROR",
         });
       }
@@ -66,36 +82,30 @@ export const imageRouter = createTRPCRouter({
       });
     }),
 
-  // optionally delete given image, and prune all images not being used by an Update or Product
-  prune: privateProcedure
-    .input(z.optional(z.object({ id: z.string() })))
-    .mutation(async ({ ctx, input }) => {
-      const unusedImages = await ctx.db.image.findMany({
-        where: {
-          NOT: {
-            OR: [{ updates: { some: {} } }, { Product: { some: {} } }],
-          },
+  prune: privateProcedure.mutation(async ({ ctx }) => {
+    const unusedImages = await ctx.db.image.findMany({
+      where: {
+        NOT: {
+          OR: [{ updates: { some: {} } }, { Product: { some: {} } }],
         },
-      });
-      const unusedIds = unusedImages.map((i) => i.id);
-      if (input) {
-        unusedIds.push(input?.id);
+      },
+    });
+    const unusedIds = unusedImages.map((i) => i.id);
+    if (unusedIds.length > 0) {
+      const result = await utapi.deleteFiles(unusedIds);
+      if (!result.success) {
+        throw new TRPCError({
+          message: "Failed to delete files",
+          code: "INTERNAL_SERVER_ERROR",
+        });
       }
-      if (unusedIds.length > 0) {
-        const result = await utapi.deleteFiles(unusedIds);
-        if (!result.success) {
-          throw new TRPCError({
-            message: "Failed to delete files",
-            code: "INTERNAL_SERVER_ERROR",
-          });
-        }
-      }
-      return ctx.db.image.deleteMany({
-        where: {
-          id: {
-            in: unusedIds,
-          },
+    }
+    return ctx.db.image.deleteMany({
+      where: {
+        id: {
+          in: unusedIds,
         },
-      });
-    }),
+      },
+    });
+  }),
 });
