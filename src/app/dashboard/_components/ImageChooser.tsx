@@ -1,18 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { api } from "@/trpc/react";
 import { type RouterOutputs } from "@/trpc/shared";
 import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
-import { FileImage, Loader2, Trash } from "lucide-react";
+import { FileImage, Loader2, MoreVertical, Trash } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { toast } from "sonner";
 
 import { UploadButton } from "@/lib/uploadthing";
 import { type UploadFileResponse } from "uploadthing/client";
 import ImageLoader from "@/components/ImageLoader";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function ImageChooser(props: {
   initialImages: RouterOutputs["image"]["getAll"];
@@ -43,6 +44,7 @@ export default function ImageChooser(props: {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w- max-h-[95vh] rounded-md p-0">
+        <OptionsMenu setLoading={setIsLoading} className="absolute left-6 top-10 z-50" disabled={isLoading} />
         <div className="grid auto-rows-fr grid-cols-3 gap-3 overflow-x-clip overflow-y-scroll p-6">
           <GridItem className="col-span-3 flex items-center justify-center border-none">
             <ImageUploader
@@ -97,6 +99,51 @@ function GridItem(props: {
     </div>
   );
 };
+
+
+
+// ===========================================================================
+// Upload Button
+// ===========================================================================
+function OptionsMenu(props: { setLoading: (isLoading: boolean) => void } & ButtonProps) {
+  const utils = api.useUtils();
+
+  const deleteUnused = api.image.prune.useMutation({
+    onMutate: () => {
+      props.setLoading(true)
+    },
+    onSettled: () => {
+      props.setLoading(false)
+    },
+    onError: () => {
+      toast.error("Something went wrong.");
+    },
+    onSuccess: () => {
+      void utils.image.getAll.invalidate();
+      toast.success("Successfully deleted unused images.");
+    },
+  });
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          size="icon"
+          variant="ghost"
+          {...props}
+        >
+          <MoreVertical className="h-5 w-5" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem className="space-x-2" onClick={() => deleteUnused.mutate()}>
+          <Trash className="h-4 w-4" />
+          <span>Delete unused</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 
 
