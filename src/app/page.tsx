@@ -51,7 +51,7 @@ function Navbar() {
             variant="link"
             className="p-0 pr-1 text-foreground sm:hidden"
           />
-          <p className="min-w-0 overflow-hidden text-nowrap font-baskervville text-xl sm:pl-4">
+          <p className="min-w-0 overflow-hidden text-nowrap  text-xl font-bold sm:pl-4">
             Whodunnit for Hire
           </p>
         </div>
@@ -95,7 +95,7 @@ function SplashSection() {
   return (
     <div className="container flex flex-col-reverse items-center gap-20 p-0 sm:flex-col sm:gap-12 sm:px-8 sm:pt-24">
       <div className="flex flex-col items-center gap-6 px-8">
-        <h1 className="text-center font-baskervville text-3xl font-bold leading-none text-primary dark:text-foreground sm:text-6xl">
+        <h1 className="text-center text-3xl font-bold leading-none text-primary dark:text-foreground sm:text-6xl">
           Whodunnit for Hire
         </h1>
         <p className="text-center text-sm dark:text-muted-foreground sm:text-base">
@@ -215,7 +215,7 @@ async function ReviewSection() {
           value={review.content}
           maxChars={550}
         />
-        <p className="font-baskervville text-lg font-semibold text-primary">{`— ${review.author}`}</p>
+        <p className="text-lg font-semibold text-primary">{`— ${review.author}`}</p>
       </div>
     );
   });
