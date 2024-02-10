@@ -7,6 +7,7 @@ import { api } from "@/trpc/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
@@ -31,7 +32,9 @@ export default function Home() {
       <main className="mx-auto flex max-w-6xl flex-col items-center gap-20 pt-12 sm:gap-32">
         <SplashSection />
         <UpdatesSection />
+        <AboutSection />
         <ReviewSection />
+        <ProductsSection />
         <Footer />
       </main>
     </>
@@ -110,12 +113,13 @@ function SplashSection() {
         </div>
       </div>
       <div className="relative w-full">
-        <ImageLoader
+        <Image
           src={coverImage}
           alt="Cover image"
           className="object-cover sm:rounded-md sm:border"
           width={1080}
           height={608}
+          priority={true}
         />
       </div>
     </div>
@@ -134,11 +138,12 @@ async function UpdatesSection() {
             alt="Update cover image"
             fill
             className="rounded-t-md object-cover"
+            sizes="(min-width: 1280px) 348px, (min-width: 1040px) calc(16.82vw + 136px), (min-width: 640px) calc(50vw - 44px), calc(100vw - 68px)"
           />
         </AspectRatio>
         <CardContent className="flex grow flex-col justify-between gap-4 p-4">
           <div className="grow space-y-2 sm:space-y-4">
-            <h3 className="font-baskervville text-lg font-semibold leading-normal sm:text-2xl">
+            <h3 className="text-lg font-semibold leading-normal sm:text-xl">
               {update.title}
             </h3>
             <p className="text-sm text-muted-foreground sm:text-base">
@@ -147,7 +152,7 @@ async function UpdatesSection() {
             <TextCollapser
               className="text-sm sm:text-base"
               value={update.content}
-              maxChars={550}
+              maxChars={450}
             />
           </div>
           <div>
@@ -172,6 +177,22 @@ async function UpdatesSection() {
   );
 }
 
+async function AboutSection() {
+  const about = await api.about.get.query();
+
+  return (
+    <div className="md:px-8">
+      <div className="container flex flex-col items-center gap-6 bg-card px-4 py-24 md:px-8">
+        <SectionHeader value="murder mystery entertainment company" />
+        <div
+          className="editor w-full space-y-6 text-left text-sm sm:text-base"
+          dangerouslySetInnerHTML={{ __html: about.content }}
+        />
+      </div>
+    </div>
+  );
+}
+
 async function ReviewSection() {
   const reviews = await api.review.getAll.query();
   const relativeTime = new RelativeTime();
@@ -192,7 +213,7 @@ async function ReviewSection() {
         <TextCollapser
           className="hidden text-sm sm:inline-block sm:text-base"
           value={review.content}
-          maxChars={650}
+          maxChars={550}
         />
         <p className="font-baskervville text-lg font-semibold text-primary">{`— ${review.author}`}</p>
       </div>
@@ -202,9 +223,46 @@ async function ReviewSection() {
   return (
     <div className="container flex flex-col items-center gap-6">
       <SectionHeader value="reviews" />
+      <div className="flex">
+        <Link href="https://search.google.com/local/writereview?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw" target="_blank">
+          <Button variant="link">Write a Review</Button>
+        </Link>
+        <Link href="https://search.google.com/local/reviews?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw" target="_blank">
+          <Button variant="link">Read More</Button>
+        </Link>
+      </div>
       <div className="grid w-full grid-cols-1 gap-8 md:gap-16 lg:grid-cols-3">
         {reviewCards}
       </div>
     </div>
   );
+}
+
+async function ProductsSection() {
+  const products = await api.product.getAll.query();
+
+  const productCards = products.map((product) => (
+    <div key={product.id}>
+      <AspectRatio ratio={3 / 2}>
+        <ImageLoader
+          src={product.image.url}
+          alt="Update cover image"
+          className="rounded-md border object-cover"
+          fill
+          sizes="(min-width: 1260px) 252px, (min-width: 1040px) calc(14vw + 78px), (min-width: 780px) calc(33.33vw - 39px), calc(50vw - 42px)"
+        />
+      </AspectRatio>
+      <h3 className="line-clamp-1 pt-2">{product.title}</h3>
+      <p className="text-muted-foreground">{product.caption}</p>
+    </div>
+  ));
+
+  return (
+    <div className="container flex flex-col items-center gap-6">
+      <SectionHeader value="products" />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-4 md:gap-6">
+        {productCards}
+      </div>
+    </div>
+  )
 }
