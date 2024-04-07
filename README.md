@@ -10,7 +10,7 @@
 
 ### Services
 
-- [PlanetScale](https://planetscale.com/)
+- [Neon](https://neon.tech/)
 - [uploadthing](https://uploadthing.com/)
 - [Kinde](https://kinde.com/)
 - [Vercel](https://vercel.com/)
