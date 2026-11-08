@@ -10,7 +10,7 @@ import { CalendarIcon, Edit, Loader2, Save } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import RelativeTime from '@yaireo/relative-time'
+import RelativeTime from "@yaireo/relative-time";
 import {
   Form,
   FormControl,
@@ -28,7 +28,11 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import TextCollapser from "@/components/TextCollapser";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type ReviewsTabContentProps = {
   intialReviews: RouterOutputs["review"]["getAll"];
@@ -61,16 +65,16 @@ function ReviewView(props: {
   review: RouterOutputs["review"]["getAll"][number];
 }) {
   const relativeTime = new RelativeTime();
-  const date = relativeTime.from(props.review.datePosted)
+  const date = relativeTime.from(props.review.datePosted);
   return (
     <Card className="relative items-start p-6 [&>*+*]:mt-2">
       <ReviewEditDialog review={props.review}>
-        <Button className="absolute right-6 top-6 z-50 space-x-2 shadow-md">
+        <Button className="absolute top-6 right-6 z-50 space-x-2 shadow-md">
           <Edit className="h-4 w-4" />
           <span>Edit</span>
         </Button>
       </ReviewEditDialog>
-      <p className="text-lg font-medium leading-none">{props.review.author}</p>
+      <p className="text-lg leading-none font-medium">{props.review.author}</p>
       <p className="text-muted-foreground">{date}</p>
       <Rating count={props.review.rating} />
       <TextCollapser value={props.review.content} maxChars={500} />
@@ -115,7 +119,6 @@ function ReviewEditDialog(props: {
     setOpen(() => toOpen);
   }
 
-
   const utils = api.useUtils();
 
   const updateReview = api.review.update.useMutation({
@@ -131,7 +134,7 @@ function ReviewEditDialog(props: {
     onSuccess: () => {
       void utils.review.getAll.invalidate();
       toast.success("Review updated.");
-      setOpen(false)
+      setOpen(false);
     },
   });
 
@@ -197,7 +200,9 @@ function ReviewEditDialog(props: {
                       onOpenAutoFocus={(e) => {
                         e.preventDefault();
                         (e.target as HTMLElement)
-                          .querySelector<HTMLElement>('[role="grid"] button[tabindex="0"]')
+                          .querySelector<HTMLElement>(
+                            '[role="grid"] button[tabindex="0"]',
+                          )
                           ?.focus();
                       }}
                     >
@@ -243,7 +248,7 @@ function ReviewEditDialog(props: {
                 </FormItem>
               )}
             />
-            <div className="container flex items-center pt-2 justify-center gap-4">
+            <div className="container flex items-center justify-center gap-4 pt-2">
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

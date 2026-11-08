@@ -1,6 +1,6 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@plugin 'tailwindcss-animate';
+@plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -22,12 +22,12 @@
 @theme inline {
   --font-sans:
     var(--font-inter), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
+    "Liberation Mono", "Courier New", monospace;
 }
 
 @theme {
   --font-baskervville:
-    Baskervville, ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+    Baskervville, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -155,7 +155,7 @@
   }
   /* Tailwind 4 no longer gives buttons a pointer cursor; keep the v3 behaviour. */
   button:not(:disabled),
-  [role='button']:not(:disabled) {
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
 }
@@ -163,11 +163,11 @@
 /* Editor styling */
 
 .editor .ProseMirror {
-  @apply p-4
+  @apply p-4;
 }
 
 .ProseMirror:focus {
-  @apply outline-hidden
+  @apply outline-hidden;
 }
 
 .editor {
@@ -199,9 +199,9 @@
 }
 
 .editor blockquote {
-  @apply border-l-4 border-foreground pl-4 italic text-muted-foreground mb-4;
+  @apply mb-4 border-l-4 border-foreground pl-4 text-muted-foreground italic;
 }
 
 .editor a {
-  @apply text-primary hover:underline hover:cursor-pointer;
+  @apply text-primary hover:cursor-pointer hover:underline;
 }

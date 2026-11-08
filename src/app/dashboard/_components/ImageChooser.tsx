@@ -12,7 +12,12 @@ import { toast } from "sonner";
 
 import { IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/images";
 import ImageLoader from "@/components/ImageLoader";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function ImageChooser(props: {
   initialImages: RouterOutputs["image"]["getAll"];
@@ -43,7 +48,11 @@ export default function ImageChooser(props: {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w- max-h-[95vh] rounded-md p-0">
-        <OptionsMenu setLoading={setIsLoading} className="absolute left-6 top-10 z-50" disabled={isLoading} />
+        <OptionsMenu
+          setLoading={setIsLoading}
+          className="absolute top-10 left-6 z-50"
+          disabled={isLoading}
+        />
         <div className="grid auto-rows-fr grid-cols-3 gap-3 overflow-x-clip overflow-y-auto p-6">
           <GridItem className="col-span-3 flex items-center justify-center border-none">
             <ImageUploader
@@ -62,8 +71,6 @@ export default function ImageChooser(props: {
     </Dialog>
   );
 }
-
-
 
 // ===========================================================================
 // Grid Item
@@ -97,9 +104,7 @@ function GridItem(props: {
       )}
     </div>
   );
-};
-
-
+}
 
 // ===========================================================================
 // Upload Button
@@ -112,10 +117,10 @@ function OptionsMenu({
 
   const deleteUnused = api.image.prune.useMutation({
     onMutate: () => {
-      setLoading(true)
+      setLoading(true);
     },
     onSettled: () => {
-      setLoading(false)
+      setLoading(false);
     },
     onError: () => {
       toast.error("Something went wrong.");
@@ -129,16 +134,15 @@ function OptionsMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          size="icon"
-          variant="ghost"
-          {...buttonProps}
-        >
+        <Button size="icon" variant="ghost" {...buttonProps}>
           <MoreVertical className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className="space-x-2" onClick={() => deleteUnused.mutate()}>
+        <DropdownMenuItem
+          className="space-x-2"
+          onClick={() => deleteUnused.mutate()}
+        >
           <Trash className="h-4 w-4" />
           <span>Delete unused</span>
         </DropdownMenuItem>
@@ -147,12 +151,13 @@ function OptionsMenu({
   );
 }
 
-
-
 // ===========================================================================
 // Upload Button
 // ===========================================================================
-function ImageUploader(props: { setLoading: (isLoading: boolean) => void, className?: string }) {
+function ImageUploader(props: {
+  setLoading: (isLoading: boolean) => void;
+  className?: string;
+}) {
   const utils = api.useUtils();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -169,7 +174,9 @@ function ImageUploader(props: { setLoading: (isLoading: boolean) => void, classN
     body.append("file", file);
     const res = await fetch("/api/admin/images", { method: "POST", body });
     if (!res.ok) {
-      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+      const data = (await res.json().catch(() => null)) as {
+        error?: string;
+      } | null;
       toast.error(data?.error ?? "Something went wrong.");
       return;
     }
@@ -212,13 +219,13 @@ function ImageUploader(props: { setLoading: (isLoading: boolean) => void, classN
   );
 }
 
-
-
 // ===========================================================================
 // Delete Button and Dialog
 // ===========================================================================
 
-function DeleteDialog(props: { image: RouterOutputs["image"]["getAll"][number] }) {
+function DeleteDialog(props: {
+  image: RouterOutputs["image"]["getAll"][number];
+}) {
   const [isLoadingMutation, setIsLoadingMutation] = useState(false);
   const [isLoadingImage, setIsLoadingImage] = useState(true);
 
@@ -246,7 +253,7 @@ function DeleteDialog(props: { image: RouterOutputs["image"]["getAll"][number] }
         <Button
           size="icon"
           variant="destructive"
-          className="absolute -right-2 -top-2 h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute -top-2 -right-2 h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
         >
           <Trash className="h-4 w-4" />
         </Button>
@@ -281,7 +288,9 @@ function DeleteDialog(props: { image: RouterOutputs["image"]["getAll"][number] }
                 Delete
               </Button>
               <DialogClose>
-                <Button variant="outline" disabled={isLoadingImage}>Cancel</Button>
+                <Button variant="outline" disabled={isLoadingImage}>
+                  Cancel
+                </Button>
               </DialogClose>
             </>
           )}

@@ -22,9 +22,14 @@ export default function TextCollapser(props: TextCollapserProps) {
 
   return (
     <p className={props.className}>
-      {(isCollapsed && showReadMoreButton) ? `${props.value.substring(0, effectiveMaxChars)}... ` : `${props.value} `}
+      {isCollapsed && showReadMoreButton
+        ? `${props.value.substring(0, effectiveMaxChars)}... `
+        : `${props.value} `}
       {showReadMoreButton && (
-        <span onClick={toggleExpand} className="cursor-pointer hover:underline text-primary whitespace-nowrap">
+        <span
+          onClick={toggleExpand}
+          className="cursor-pointer whitespace-nowrap text-primary hover:underline"
+        >
           {isCollapsed ? "Read more" : "Show less"}
         </span>
       )}

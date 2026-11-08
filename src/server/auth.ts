@@ -19,23 +19,33 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 export type AccessIdentity = { email: string | undefined };
 
 /** Optional because .dev.vars may blank them, and DEV_ADMIN_EMAIL only exists locally. */
-type AuthVars = { CF_ACCESS_TEAM_DOMAIN?: string; CF_ACCESS_AUD?: string; DEV_ADMIN_EMAIL?: string };
+type AuthVars = {
+  CF_ACCESS_TEAM_DOMAIN?: string;
+  CF_ACCESS_AUD?: string;
+  DEV_ADMIN_EMAIL?: string;
+};
 
 // Built on first use, because the vars only exist inside a request. jose caches the keys and
 // refetches them when Access rotates them.
-let access: { issuer: string; jwks: ReturnType<typeof createRemoteJWKSet> } | undefined;
+let access:
+  { issuer: string; jwks: ReturnType<typeof createRemoteJWKSet> } | undefined;
 
 function getAccess(teamDomain: string) {
   if (!access) {
     const host = teamDomain.replace(/^https?:\/\//, "").replace(/\/+$/, "");
     const issuer = `https://${host}`;
-    access = { issuer, jwks: createRemoteJWKSet(new URL(`${issuer}/cdn-cgi/access/certs`)) };
+    access = {
+      issuer,
+      jwks: createRemoteJWKSet(new URL(`${issuer}/cdn-cgi/access/certs`)),
+    };
   }
   return access;
 }
 
 /** The Access identity of the request, or `null` if it isn't from a logged-in admin. */
-export async function verifyAccess(headers: Headers): Promise<AccessIdentity | null> {
+export async function verifyAccess(
+  headers: Headers,
+): Promise<AccessIdentity | null> {
   const env = getCloudflareContext().env as AuthVars;
   if (!env.CF_ACCESS_TEAM_DOMAIN || !env.CF_ACCESS_AUD) {
     return env.DEV_ADMIN_EMAIL ? { email: env.DEV_ADMIN_EMAIL } : null;
@@ -50,7 +60,9 @@ export async function verifyAccess(headers: Headers): Promise<AccessIdentity | n
       issuer: config.issuer,
       audience: env.CF_ACCESS_AUD,
     });
-    return { email: typeof payload.email === "string" ? payload.email : undefined };
+    return {
+      email: typeof payload.email === "string" ? payload.email : undefined,
+    };
   } catch {
     return null;
   }

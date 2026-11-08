@@ -11,7 +11,10 @@ const out = execFileSync("npx", ["wrangler", "deploy", "--dry-run"], {
 });
 const match = out.match(/gzip:\s*([\d.]+)\s*KiB/);
 if (!match) {
-  console.error("Couldn't find the gzip size in `wrangler deploy --dry-run` output:\n" + out);
+  console.error(
+    "Couldn't find the gzip size in `wrangler deploy --dry-run` output:\n" +
+      out,
+  );
   process.exit(1);
 }
 

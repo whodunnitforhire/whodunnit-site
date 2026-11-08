@@ -4,14 +4,14 @@ The website for Whodunnit for Hire ([whodunnitforhire.com](https://whodunnitforh
 
 Everything runs on one Cloudflare account, on the free plans:
 
-| Piece | Cloudflare product | Name |
-|---|---|---|
-| Hosting | Workers, via [OpenNext](https://opennext.js.org/cloudflare) | Worker `whodunnit-site` |
-| Database | D1 (SQLite) | `whodunnit` |
-| Images | R2, served from `images.whodunnitforhire.com` | bucket `whodunnit-images` |
-| Image resizing | Images (`/_next/image`) | binding `IMAGES` |
-| Admin login | Zero Trust Access, email one-time PIN | team `odd-recipe-1885` |
-| Analytics | Web Analytics (enabled on the zone, no code) | |
+| Piece          | Cloudflare product                                          | Name                      |
+| -------------- | ----------------------------------------------------------- | ------------------------- |
+| Hosting        | Workers, via [OpenNext](https://opennext.js.org/cloudflare) | Worker `whodunnit-site`   |
+| Database       | D1 (SQLite)                                                 | `whodunnit`               |
+| Images         | R2, served from `images.whodunnitforhire.com`               | bucket `whodunnit-images` |
+| Image resizing | Images (`/_next/image`)                                     | binding `IMAGES`          |
+| Admin login    | Zero Trust Access, email one-time PIN                       | team `odd-recipe-1885`    |
+| Analytics      | Web Analytics (enabled on the zone, no code)                |                           |
 
 The code is [Next.js](https://nextjs.org) 16, [tRPC](https://trpc.io), [Prisma](https://prisma.io) with the D1 adapter, [Tailwind CSS](https://tailwindcss.com) and [shadcn/ui](https://ui.shadcn.com).
 
@@ -33,18 +33,18 @@ npm run dev                      # http://localhost:3000
 
 Locally uploaded images go into the local bucket but get the production `images.whodunnitforhire.com` URL, so their thumbnails don't load. That's expected.
 
-| Command | What it does |
-|---|---|
-| `npm run dev` | Next.js dev server with local bindings |
-| `npm run preview` | Build for Workers and run the real Worker locally (http://localhost:8787) |
-| `npm run deploy` | Build for Workers and deploy to Cloudflare |
-| `npm run lint` / `npm run typecheck` | ESLint / TypeScript |
-| `npm run check:size` | Build for Workers and fail if the Worker is over the 3 MiB free-plan limit |
-| `npm run typegen` | Regenerate the Prisma client, `cloudflare-env.d.ts` and Next's route types (runs on install; rerun after changing the schema or `wrangler.jsonc`) |
-| `npm run db:migrate:local` / `db:migrate:remote` | Apply new files in `migrations/` to local / production D1 |
-| `npm run db:seed:local` | Replace local data with sample rows |
-| `npm run db:diff` | Print the SQL that turns local D1 into `prisma/schema.prisma` |
-| `npm run db:studio` | Browse local D1 in Prisma Studio |
+| Command                                          | What it does                                                                                                                                      |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`                                    | Next.js dev server with local bindings                                                                                                            |
+| `npm run preview`                                | Build for Workers and run the real Worker locally (http://localhost:8787)                                                                         |
+| `npm run deploy`                                 | Build for Workers and deploy to Cloudflare                                                                                                        |
+| `npm run lint` / `npm run typecheck`             | ESLint / TypeScript                                                                                                                               |
+| `npm run check:size`                             | Build for Workers and fail if the Worker is over the 3 MiB free-plan limit                                                                        |
+| `npm run typegen`                                | Regenerate the Prisma client, `cloudflare-env.d.ts` and Next's route types (runs on install; rerun after changing the schema or `wrangler.jsonc`) |
+| `npm run db:migrate:local` / `db:migrate:remote` | Apply new files in `migrations/` to local / production D1                                                                                         |
+| `npm run db:seed:local`                          | Replace local data with sample rows                                                                                                               |
+| `npm run db:diff`                                | Print the SQL that turns local D1 into `prisma/schema.prisma`                                                                                     |
+| `npm run db:studio`                              | Browse local D1 in Prisma Studio                                                                                                                  |
 
 ## Deploying
 

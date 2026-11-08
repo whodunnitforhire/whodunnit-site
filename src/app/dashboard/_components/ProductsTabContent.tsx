@@ -57,9 +57,13 @@ export default function ProductsTabContent(props: {
         </ProductEditDialog>
       </div>
       <Separator />
-    <div className="grid auto-rows-fr grid-cols-1 gap-4 wrap-break-word pt-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid auto-rows-fr grid-cols-1 gap-4 pt-4 wrap-break-word sm:grid-cols-3 lg:grid-cols-5">
         {products.map((product) => (
-          <ProductView key={product.id} product={product} initialImages={props.initialImages} />
+          <ProductView
+            key={product.id}
+            product={product}
+            initialImages={props.initialImages}
+          />
         ))}
       </div>
     </div>
@@ -72,8 +76,15 @@ function ProductView(props: {
 }) {
   return (
     <Card className="relative">
-      <ProductEditDialog product={props.product} initialImages={props.initialImages}>
-        <Button variant="outline" size="icon" className="absolute z-50 right-2 top-2 shadow-md">
+      <ProductEditDialog
+        product={props.product}
+        initialImages={props.initialImages}
+      >
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute top-2 right-2 z-50 shadow-md"
+        >
           <Edit className="h-4 w-4" />
         </Button>
       </ProductEditDialog>
@@ -100,8 +111,6 @@ const productFormSchema = z.object({
   caption: z.optional(z.string().max(255)),
 });
 
-
-
 // ===========================================================================
 // Product Editor
 // ===========================================================================
@@ -125,7 +134,7 @@ function ProductEditDialog(props: {
   function setOpenAndReset(toOpen: boolean) {
     if (toOpen) {
       form.reset({ ...props.product });
-      setImage(!!props.product ? props.product.image : undefined)
+      setImage(!!props.product ? props.product.image : undefined);
     }
     setOpen(() => toOpen);
   }
@@ -187,11 +196,15 @@ function ProductEditDialog(props: {
 
   function onSubmit(values: z.infer<typeof productFormSchema>) {
     if (!image) {
-      toast.error("Error submitting form, image missing.")
-      return
-    };
+      toast.error("Error submitting form, image missing.");
+      return;
+    }
     if (props.product) {
-      updateProduct.mutate({ ...values, imageId: image.id, id: props.product?.id });
+      updateProduct.mutate({
+        ...values,
+        imageId: image.id,
+        id: props.product?.id,
+      });
     } else {
       createProduct.mutate({ ...values, imageId: image.id });
     }
@@ -215,7 +228,12 @@ function ProductEditDialog(props: {
             </div>
           )}
           <div className="space-y-2">
-            <p>Image <span className="text-muted-foreground opacity-50">{"(3:2)"}</span></p>
+            <p>
+              Image{" "}
+              <span className="text-muted-foreground opacity-50">
+                {"(3:2)"}
+              </span>
+            </p>
             <ImageChooser
               initialImages={props.initialImages}
               handleChoice={setImage}

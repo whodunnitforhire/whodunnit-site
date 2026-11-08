@@ -10,7 +10,11 @@ export default function ReturnToSiteButton(props: ButtonProps) {
 
   return (
     <Link href="/">
-      <Button className={"space-x-2 " + props.className} {...props} onClick={() => setIsLoading(true)}>
+      <Button
+        className={"space-x-2 " + props.className}
+        {...props}
+        onClick={() => setIsLoading(true)}
+      >
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (

@@ -14,6 +14,9 @@ export const getDb = cache(
   () =>
     new PrismaClient({
       adapter: new PrismaD1(getCloudflareContext().env.DB),
-      log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+      log:
+        process.env.NODE_ENV === "development"
+          ? ["query", "error", "warn"]
+          : ["error"],
     }),
 );

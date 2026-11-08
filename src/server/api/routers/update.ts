@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, privateProcedure, publicProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
 export const updateRouter = createTRPCRouter({
@@ -28,7 +32,10 @@ export const updateRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       if (!(await ctx.db.image.count({ where: { id: input.imageId } }))) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Provided image doesn't exist" })
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Provided image doesn't exist",
+        });
       }
       return ctx.db.update.create({
         data: { ...input, caption: input.caption ?? "" },
@@ -49,7 +56,10 @@ export const updateRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       if (!(await ctx.db.image.count({ where: { id: input.imageId } }))) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Provided image doesn't exist" })
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Provided image doesn't exist",
+        });
       }
       return ctx.db.update.update({
         where: {
@@ -59,32 +69,36 @@ export const updateRouter = createTRPCRouter({
       });
     }),
 
-  delete: privateProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
-    return ctx.db.update.delete({
-      where: {
-        id: input,
-      },
-    });
-  }),
+  delete: privateProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.update.delete({
+        where: {
+          id: input,
+        },
+      });
+    }),
 
-  deleteAllButNewest: privateProcedure.input(z.number()).mutation(async ({ ctx, input }) => {
-    const thresholdRecord = await ctx.db.update.findMany({
-      take: input,
-      orderBy: {
-        createdAt: "desc",
-      },
-      skip: (input - 1),
-    })
-    if (!thresholdRecord || thresholdRecord.length === 0) {
-      return;
-    }
-    const thresholdDate = thresholdRecord[0]?.createdAt;
-    await ctx.db.update.deleteMany({
-      where: {
-        createdAt: {
-          lt: thresholdDate
-        }
+  deleteAllButNewest: privateProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      const thresholdRecord = await ctx.db.update.findMany({
+        take: input,
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip: input - 1,
+      });
+      if (!thresholdRecord || thresholdRecord.length === 0) {
+        return;
       }
-    })
-  }),
+      const thresholdDate = thresholdRecord[0]?.createdAt;
+      await ctx.db.update.deleteMany({
+        where: {
+          createdAt: {
+            lt: thresholdDate,
+          },
+        },
+      });
+    }),
 });

@@ -9,7 +9,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import Link from "next/link";
-import { DialogTitle, Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import React, { useState, type ReactNode } from "react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,7 +30,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator  } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { type CheckedState } from "@radix-ui/react-checkbox";
@@ -57,9 +69,15 @@ export default function UpdatesTabContent(props: UpdatesTabContentProps) {
         </UpdateEditDialog>
       </div>
       <Separator />
-      <div className="grid auto-rows-fr grid-cols-1 gap-4 wrap-break-word pt-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid auto-rows-fr grid-cols-1 gap-4 pt-4 wrap-break-word md:grid-cols-2 lg:grid-cols-3">
         {updates?.map((update) => {
-          return <UpdateView key={update.id}update={{ ...update }} initialImages={props.initialImages} />;
+          return (
+            <UpdateView
+              key={update.id}
+              update={{ ...update }}
+              initialImages={props.initialImages}
+            />
+          );
         })}
       </div>
     </div>
@@ -74,10 +92,13 @@ function UpdateView(props: {
   return (
     <div className="relative">
       <Card className="flex h-full flex-col">
-        <UpdateEditDialog update={props.update} initialImages={props.initialImages}>
+        <UpdateEditDialog
+          update={props.update}
+          initialImages={props.initialImages}
+        >
           <Button
             variant="outline"
-            className="absolute right-4 top-4 z-50 space-x-2 shadow-md"
+            className="absolute top-4 right-4 z-50 space-x-2 shadow-md"
           >
             <Edit className="h-4 w-4" />
             <span>Edit</span>
@@ -135,8 +156,6 @@ const updateFormSchema = z.object({
   buttonLink: z.string().min(1).max(2083),
 });
 
-
-
 // ===========================================================================
 // Update Editor
 // ===========================================================================
@@ -163,8 +182,8 @@ export function UpdateEditDialog(props: {
   function setOpenAndReset(toOpen: boolean) {
     if (toOpen) {
       form.reset({ ...props.update });
-      setImage(!!props.update ? props.update.image : undefined)
-      setAutoDeleteOld(true)
+      setImage(!!props.update ? props.update.image : undefined);
+      setAutoDeleteOld(true);
     }
     setOpen(() => toOpen);
   }
@@ -229,18 +248,22 @@ export function UpdateEditDialog(props: {
     onError: () => {
       toast.error("Failed to delete oldest.");
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof updateFormSchema>) {
     if (!image) {
-      toast.error("Error submitting form, image missing.")
-      return
+      toast.error("Error submitting form, image missing.");
+      return;
     }
     if (props.update) {
-      updateUpdate.mutate({ ...values, imageId: image.id, id: props.update.id });
+      updateUpdate.mutate({
+        ...values,
+        imageId: image.id,
+        id: props.update.id,
+      });
     } else {
       if (autoDeleteOld === true) {
-        deleteOldestUpdates.mutate(8)
+        deleteOldestUpdates.mutate(8);
       }
       createUpdate.mutate({ ...values, imageId: image.id });
     }
@@ -264,7 +287,12 @@ export function UpdateEditDialog(props: {
             </div>
           )}
           <div className="space-y-2">
-            <p>Image <span className="text-muted-foreground opacity-50">{"(2:1)"}</span></p>
+            <p>
+              Image{" "}
+              <span className="text-muted-foreground opacity-50">
+                {"(2:1)"}
+              </span>
+            </p>
             <ImageChooser
               initialImages={props.initialImages}
               handleChoice={setImage}
@@ -345,9 +373,17 @@ export function UpdateEditDialog(props: {
             </div>
             <Separator />
             {!props.update && (
-              <div className="container flex justify-center items-center space-x-2">
-                <Checkbox id="deletion" defaultChecked checked={autoDeleteOld} onCheckedChange={setAutoDeleteOld} />
-                <Label htmlFor="deletion" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <div className="container flex items-center justify-center space-x-2">
+                <Checkbox
+                  id="deletion"
+                  defaultChecked
+                  checked={autoDeleteOld}
+                  onCheckedChange={setAutoDeleteOld}
+                />
+                <Label
+                  htmlFor="deletion"
+                  className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
                   {"Auto delete old posts (keep 8 newest)"}
                 </Label>
               </div>

@@ -1,7 +1,11 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure, privateProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  privateProcedure,
+} from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
 // Uploads go through POST /api/admin/images; the R2 object key is the Image id.
@@ -48,7 +52,7 @@ export const imageRouter = createTRPCRouter({
       ) {
         throw new TRPCError({
           message: "Cannot delete image because it is currently in use",
-          code: "CONFLICT", 
+          code: "CONFLICT",
         });
       }
       await bucket().delete(input.id);

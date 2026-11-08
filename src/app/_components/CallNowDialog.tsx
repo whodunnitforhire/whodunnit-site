@@ -1,6 +1,11 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import React, { type ReactNode, useEffect, useState } from "react";
 import SectionHeader from "./SectionHeader";
 import { Button } from "@/components/ui/button";
@@ -23,11 +28,11 @@ export default function CallNowDialog(props: CallNowDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
-      <DialogContent className="flex flex-col items-center w-11/12 sm:w-full rounded-md">
+      <DialogContent className="flex w-11/12 flex-col items-center rounded-md sm:w-full">
         <DialogHeader>
           <SectionHeader value="contact us" />
         </DialogHeader>
-        <div className="flex flex-col items-center bg-popover gap-3 p-6 w-full rounded-md">
+        <div className="flex w-full flex-col items-center gap-3 rounded-md bg-popover p-6">
           <p>{"(410) 549-2722"}</p>
           <Link href="tel:+1-410-549-2722">
             <Button size="lg">Call Now</Button>

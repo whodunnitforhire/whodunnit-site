@@ -39,7 +39,7 @@ export default async function Dashboard() {
     <>
       <div className="mx-auto max-w-7xl p-12">
         <Tabs defaultValue="updates">
-          <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-4">
             <ReturnToSiteButton variant="outline" />
             <TabsList>
               <TabsTrigger value="updates">Updates</TabsTrigger>
@@ -47,8 +47,12 @@ export default async function Dashboard() {
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
               <TabsTrigger value="about">About</TabsTrigger>
             </TabsList>
-            <div className="justify-end ml-auto">
-              <NavOptions variant="ghost" size="icon" email={user.email ?? "Profile"} />
+            <div className="ml-auto justify-end">
+              <NavOptions
+                variant="ghost"
+                size="icon"
+                email={user.email ?? "Profile"}
+              />
             </div>
           </div>
           <TabsContent value="updates">

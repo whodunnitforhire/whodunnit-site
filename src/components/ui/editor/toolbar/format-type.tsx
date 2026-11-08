@@ -1,7 +1,7 @@
 // https://github.com/sravimohan/shandcn-ui-extensions
 
-import * as React from "react"
-import { type Editor } from "@tiptap/react"
+import * as React from "react";
+import { type Editor } from "@tiptap/react";
 
 import {
   Select,
@@ -10,40 +10,40 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 interface FormatTypeProps {
-  editor: Editor
+  editor: Editor;
 }
 
 export function FormatType({ editor }: FormatTypeProps) {
   const value = () => {
-    if (editor.isActive("paragraph")) return "paragraph"
-    if (editor.isActive("heading", { level: 1 })) return "h1"
-    if (editor.isActive("heading", { level: 2 })) return "h2"
-    if (editor.isActive("heading", { level: 3 })) return "h3"
-  }
+    if (editor.isActive("paragraph")) return "paragraph";
+    if (editor.isActive("heading", { level: 1 })) return "h1";
+    if (editor.isActive("heading", { level: 2 })) return "h2";
+    if (editor.isActive("heading", { level: 3 })) return "h3";
+  };
 
   const onChange = (value: string) => {
     switch (value) {
       case "paragraph":
-        editor.chain().focus().setParagraph().run()
-        break
+        editor.chain().focus().setParagraph().run();
+        break;
       case "h1":
-        editor.chain().focus().toggleHeading({ level: 1 }).run()
-        break
+        editor.chain().focus().toggleHeading({ level: 1 }).run();
+        break;
       case "h2":
-        editor.chain().focus().toggleHeading({ level: 2 }).run()
-        break
+        editor.chain().focus().toggleHeading({ level: 2 }).run();
+        break;
       case "h3":
-        editor.chain().focus().toggleHeading({ level: 3 }).run()
-        break
+        editor.chain().focus().toggleHeading({ level: 3 }).run();
+        break;
     }
-  }
+  };
 
   return (
     <Select onValueChange={onChange} defaultValue={value()} value={value()}>
-      <SelectTrigger className="h-8 w-[120px] invisible sm:visible">
+      <SelectTrigger className="invisible h-8 w-[120px] sm:visible">
         <SelectValue placeholder="Select format" />
       </SelectTrigger>
       <SelectContent>
@@ -55,5 +55,5 @@ export function FormatType({ editor }: FormatTypeProps) {
         </SelectGroup>
       </SelectContent>
     </Select>
-  )
+  );
 }

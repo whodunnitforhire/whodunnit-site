@@ -11,7 +11,9 @@ import { defineConfig } from "prisma/config";
 function localD1() {
   const dir = ".wrangler/state/v3/d1/miniflare-D1DatabaseObject";
   try {
-    const file = readdirSync(dir).find((f) => f.endsWith(".sqlite") && f !== "metadata.sqlite");
+    const file = readdirSync(dir).find(
+      (f) => f.endsWith(".sqlite") && f !== "metadata.sqlite",
+    );
     return file && `file:${path.join(dir, file)}`;
   } catch {
     return undefined;

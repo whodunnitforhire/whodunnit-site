@@ -42,7 +42,7 @@ export default function Home() {
 
 function Navbar() {
   return (
-    <nav className="fixed top-0 z-50 flex h-12 w-full items-center justify-center border-b border-border bg-background bg-opacity-95 p-2 px-4 2xl:px-16">
+    <nav className="bg-opacity-95 fixed top-0 z-50 flex h-12 w-full items-center justify-center border-b border-border bg-background p-2 px-4 2xl:px-16">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center justify-center">
           <ThemeToggle
@@ -50,7 +50,7 @@ function Navbar() {
             variant="link"
             className="p-0 pr-1 text-foreground sm:hidden"
           />
-          <p className="min-w-0 overflow-hidden text-nowrap  text-xl font-bold sm:pl-4">
+          <p className="min-w-0 overflow-hidden text-xl font-bold text-nowrap sm:pl-4">
             Whodunnit for Hire
           </p>
         </div>
@@ -80,7 +80,7 @@ function Navbar() {
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="w-full px-8 pb-8 text-muted-foreground sm:pb-24 sm:pt-24">
+    <footer className="w-full px-8 pb-8 text-muted-foreground sm:pt-24 sm:pb-24">
       <Separator />
       <div className="flex flex-col items-center gap-4 pt-8 text-sm opacity-50 sm:pt-12 sm:text-base">
         <p className="text-center">{`© ${year} Whodunnit for Hire, LLC | All rights reserved.`}</p>
@@ -97,10 +97,10 @@ function SplashSection() {
   return (
     <div className="container flex flex-col-reverse items-center gap-20 p-0 sm:flex-col sm:gap-12 sm:px-8 sm:pt-24">
       <div className="flex flex-col items-center gap-6 px-8">
-        <h1 className="text-center text-3xl font-bold leading-none text-primary dark:text-foreground sm:text-6xl">
+        <h1 className="text-center text-3xl leading-none font-bold text-primary sm:text-6xl dark:text-foreground">
           Whodunnit for Hire
         </h1>
-        <p className="text-center text-sm dark:text-muted-foreground sm:text-base">
+        <p className="text-center text-sm sm:text-base dark:text-muted-foreground">
           Murder Mystery Entertainment | Headquartered in Maryland
         </p>
         <div>
@@ -149,7 +149,7 @@ async function UpdatesSection() {
         </AspectRatio>
         <CardContent className="flex grow flex-col justify-between gap-4 p-4">
           <div className="grow space-y-2 sm:space-y-4">
-            <h3 className="text-lg font-semibold leading-normal sm:text-xl">
+            <h3 className="text-lg leading-normal font-semibold sm:text-xl">
               {update.title}
             </h3>
             <p className="text-sm text-muted-foreground sm:text-base">
@@ -208,12 +208,14 @@ async function ReviewSection() {
   }
 
   const reviewCards = reviews.map((review) => {
-    const timeSincePost = relativeTime.from(review.datePosted)
+    const timeSincePost = relativeTime.from(review.datePosted);
     return (
       <div key={review.id} className="w-full space-y-2 sm:space-y-4">
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           <Rating count={review.rating} />
-          <p className="text-muted-foreground text-sm sm:text-base">{timeSincePost}</p>
+          <p className="text-sm text-muted-foreground sm:text-base">
+            {timeSincePost}
+          </p>
         </div>
         <TextCollapser
           className="text-sm sm:hidden sm:text-base"
@@ -234,10 +236,16 @@ async function ReviewSection() {
     <div className="container flex flex-col items-center gap-6">
       <SectionHeader value="reviews" />
       <div className="flex">
-        <Link href="https://search.google.com/local/writereview?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw" target="_blank">
+        <Link
+          href="https://search.google.com/local/writereview?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw"
+          target="_blank"
+        >
           <Button variant="link">Write a Review</Button>
         </Link>
-        <Link href="https://search.google.com/local/reviews?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw" target="_blank">
+        <Link
+          href="https://search.google.com/local/reviews?placeid=ChIJKV5EgtkkyIkR60fnn3S75mw"
+          target="_blank"
+        >
           <Button variant="link">Read More</Button>
         </Link>
       </div>
@@ -274,9 +282,9 @@ async function ProductsSection() {
   return (
     <div className="container flex flex-col items-center gap-6">
       <SectionHeader value="products" />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-4 md:gap-6">
+      <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
         {productCards}
       </div>
     </div>
-  )
+  );
 }

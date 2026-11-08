@@ -17,7 +17,10 @@ export async function POST(request: Request) {
   try {
     file = (await request.formData()).get("file");
   } catch {
-    return Response.json({ error: "Expected a multipart form." }, { status: 400 });
+    return Response.json(
+      { error: "Expected a multipart form." },
+      { status: 400 },
+    );
   }
   if (!(file instanceof File)) {
     return Response.json({ error: "No file was sent." }, { status: 400 });
@@ -30,7 +33,10 @@ export async function POST(request: Request) {
     );
   }
   if (file.size === 0 || file.size > MAX_IMAGE_BYTES) {
-    return Response.json({ error: "Images must be 4 MB or smaller." }, { status: 413 });
+    return Response.json(
+      { error: "Images must be 4 MB or smaller." },
+      { status: 413 },
+    );
   }
 
   const key = `${crypto.randomUUID()}.${ext}`;

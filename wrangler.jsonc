@@ -10,26 +10,26 @@
       "binding": "DB",
       "database_name": "whodunnit",
       "database_id": "b0135091-ff52-45b4-af66-bfd002f90624",
-      "migrations_dir": "migrations"
-    }
+      "migrations_dir": "migrations",
+    },
   ],
   "r2_buckets": [
-    { "binding": "IMAGES_BUCKET", "bucket_name": "whodunnit-images" }
+    { "binding": "IMAGES_BUCKET", "bucket_name": "whodunnit-images" },
   ],
   "images": { "binding": "IMAGES" },
   // Cloudflare Access (admin login), checked in src/server/auth.ts. Not secret. The AUD tag is
   // on the Access application's overview page. .dev.vars blanks both for local dev.
   "vars": {
     "CF_ACCESS_TEAM_DOMAIN": "odd-recipe-1885.cloudflareaccess.com",
-    "CF_ACCESS_AUD": "5a9a17f93c54c51df9e5024c3cb274cde97fc6abcc4e004306e78821a446b12d"
+    "CF_ACCESS_AUD": "5a9a17f93c54c51df9e5024c3cb274cde97fc6abcc4e004306e78821a446b12d",
   },
   // Wrangler creates the DNS record and certificate for each custom domain on deploy. Each
   // hostname also needs the admin paths added to the Access application (see README).
   "routes": [
     { "pattern": "whodunnitforhire.com", "custom_domain": true },
-    { "pattern": "www.whodunnitforhire.com", "custom_domain": true }
+    { "pattern": "www.whodunnitforhire.com", "custom_domain": true },
   ],
   // workers.dev and preview URLs would bypass Cloudflare Access, so both stay off.
   "workers_dev": false,
-  "preview_urls": false
+  "preview_urls": false,
 }
