@@ -2,7 +2,6 @@
 
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
 
 import EditorToolbar from "./toolbar/editor-toolbar";
 
@@ -14,15 +13,14 @@ interface EditorProps {
 
 const Editor = ({ content, placeholder, onChange }: EditorProps) => {
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Link.configure({
-        HTMLAttributes: { target: "_blank" },
-        openOnClick: true,
-        autolink: true,
-        linkOnPaste: true,
-      }),
-    ],
+    // StarterKit includes Link. Its defaults (open on click, autolink, link on
+    // paste, target="_blank" with rel="noopener noreferrer nofollow") are what we want.
+    extensions: [StarterKit],
+    // Render on the client only, so the server and client HTML match.
+    immediatelyRender: false,
+    // The toolbar reads editor.isActive()/can() while rendering, so it needs a
+    // re-render on every transaction (the default before tiptap 3).
+    shouldRerenderOnTransaction: true,
     editorProps: {
       attributes: {
         class: "focus:outline-none",
