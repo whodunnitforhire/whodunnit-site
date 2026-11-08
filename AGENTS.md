@@ -1,0 +1,5 @@
+- **Schema changes:** don't use `prisma migrate`. Wrangler owns `migrations/`, and Prisma only produces the SQL through `npm run db:diff`. Follow "Changing the database schema" in the README.
+- **Worker size:** the free plan caps the Worker at 3 MiB gzipped, and the build is about 2.1 MiB. Lint and typecheck won't catch going over, and the deploy fails. Run `npm run check:size` after adding a dependency. If it goes over, trim the dependency or pick a smaller one. Don't move to Workers Paid.
+- **Access:** keep `workers_dev` and `preview_urls` off in `wrangler.jsonc`. Those URLs skip the admin login.
+- **Bundler:** keep `--webpack` on `dev` and `build`. Turbopack breaks Prisma's wasm on Workers (see the README).
+- **Production:** don't run `db:migrate:remote` or `deploy` unless asked. Both change the live site.

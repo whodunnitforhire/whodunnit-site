@@ -39,6 +39,7 @@ Locally uploaded images go into the local bucket but get the production `images.
 | `npm run preview` | Build for Workers and run the real Worker locally (http://localhost:8787) |
 | `npm run deploy` | Build for Workers and deploy to Cloudflare |
 | `npm run lint` / `npm run typecheck` | ESLint / TypeScript |
+| `npm run check:size` | Build for Workers and fail if the Worker is over the 3 MiB free-plan limit |
 | `npm run typegen` | Regenerate the Prisma client, `cloudflare-env.d.ts` and Next's route types (runs on install; rerun after changing the schema or `wrangler.jsonc`) |
 | `npm run db:migrate:local` / `db:migrate:remote` | Apply new files in `migrations/` to local / production D1 |
 | `npm run db:seed:local` | Replace local data with sample rows |

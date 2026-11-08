@@ -10,6 +10,7 @@
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "check:size": "opennextjs-cloudflare build && node scripts/check-size.mjs",
     "typegen": "prisma generate && wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts && next typegen",
     "postinstall": "npm run typegen",
     "db:migrate:local": "wrangler d1 migrations apply whodunnit --local",
