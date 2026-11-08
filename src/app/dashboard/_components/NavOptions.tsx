@@ -10,11 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, SquareUserRound } from "lucide-react";
-import { useTheme } from "next-themes";
 
 export default function NavOptions(props: { email: string } & ButtonProps) {
-  const { setTheme } = useTheme();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,15 +20,6 @@ export default function NavOptions(props: { email: string } & ButtonProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Theme</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <DropdownMenuLabel className="flex gap-2 overflow-hidden">
           <SquareUserRound className="h-5 w-5" />
           <span className="max-w-32 overflow-hidden text-ellipsis whitespace-nowrap">

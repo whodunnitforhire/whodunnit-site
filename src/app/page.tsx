@@ -1,5 +1,4 @@
 import ImageLoader from "@/components/ImageLoader";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import coverImage from "../../public/cover-image.jpg";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./_components/SectionHeader";
@@ -45,11 +44,6 @@ function Navbar() {
     <nav className="bg-opacity-95 fixed top-0 z-50 flex h-12 w-full items-center justify-center border-b border-border bg-background p-2 px-4 2xl:px-16">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center justify-center">
-          <ThemeToggle
-            size="sm"
-            variant="link"
-            className="p-0 pr-1 text-foreground sm:hidden"
-          />
           <p className="min-w-0 overflow-hidden text-xl font-bold text-nowrap sm:pl-4">
             Whodunnit for Hire
           </p>
@@ -70,7 +64,6 @@ function Navbar() {
               <span className="hidden sm:inline">Events</span>
             </Button>
           </Link>
-          <ThemeToggle size="sm" variant="ghost" className="hidden sm:inline" />
         </div>
       </div>
     </nav>
@@ -97,10 +90,10 @@ function SplashSection() {
   return (
     <div className="container flex flex-col-reverse items-center gap-20 p-0 sm:flex-col sm:gap-12 sm:px-8 sm:pt-24">
       <div className="flex flex-col items-center gap-6 px-8">
-        <h1 className="text-center text-3xl leading-none font-bold text-primary sm:text-6xl dark:text-foreground">
+        <h1 className="text-center text-3xl leading-none font-bold text-primary sm:text-6xl">
           Whodunnit for Hire
         </h1>
-        <p className="text-center text-sm sm:text-base dark:text-muted-foreground">
+        <p className="text-center text-sm sm:text-base">
           Murder Mystery Entertainment | Headquartered in Maryland
         </p>
         <div>

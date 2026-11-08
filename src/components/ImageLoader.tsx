@@ -10,7 +10,7 @@ export default function ImageLoader(props: ImageProps) {
   return (
     <Image
       {...props}
-      className={`${isLoading ? "animate-pulse rounded-md border bg-gray-300 dark:bg-gray-800" : props.className}`}
+      className={`${isLoading ? "animate-pulse rounded-md border bg-gray-300" : props.className}`}
       onLoad={() => setIsLoading(false)}
     />
   );

@@ -5,7 +5,6 @@ import { Inter as FontSans } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "sonner";
 
 const fontSans = FontSans({
@@ -26,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -34,15 +33,8 @@ export default function RootLayout({
         )}
       >
         <TRPCReactProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster position="bottom-center" />
-          </ThemeProvider>
+          {children}
+          <Toaster position="bottom-center" />
         </TRPCReactProvider>
       </body>
     </html>
