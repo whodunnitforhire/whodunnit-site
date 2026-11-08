@@ -129,7 +129,7 @@ function SplashSection() {
 }
 
 async function UpdatesSection() {
-  const updates = await api.update.getAll.query();
+  const updates = await api.update.getAll();
 
   if (updates.length <= 0) {
     return null;
@@ -184,7 +184,7 @@ async function UpdatesSection() {
 }
 
 async function AboutSection() {
-  const about = await api.about.get.query();
+  const about = await api.about.get();
 
   return (
     <div className="md:px-8">
@@ -200,7 +200,7 @@ async function AboutSection() {
 }
 
 async function ReviewSection() {
-  const reviews = await api.review.getAll.query();
+  const reviews = await api.review.getAll();
   const relativeTime = new RelativeTime();
 
   if (reviews.length <= 0) {
@@ -249,7 +249,7 @@ async function ReviewSection() {
 }
 
 async function ProductsSection() {
-  const products = await api.product.getAll.query();
+  const products = await api.product.getAll();
 
   if (products.length <= 0) {
     return null;

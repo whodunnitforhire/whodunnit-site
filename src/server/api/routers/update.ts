@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from "@/server/api/trpc";
-import { api } from "@/trpc/server";
 import { TRPCError } from "@trpc/server";
 
 export const updateRouter = createTRPCRouter({
@@ -28,7 +27,7 @@ export const updateRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (!await api.image.exists.query(input.imageId)) {
+      if (!(await ctx.db.image.count({ where: { id: input.imageId } }))) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Provided image doesn't exist" })
       }
       return ctx.db.update.create({
@@ -49,7 +48,7 @@ export const updateRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (!await api.image.exists.query(input.imageId)) {
+      if (!(await ctx.db.image.count({ where: { id: input.imageId } }))) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Provided image doesn't exist" })
       }
       return ctx.db.update.update({

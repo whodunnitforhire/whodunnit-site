@@ -29,11 +29,11 @@ export default async function Dashboard() {
     );
   }
 
-  const reviews = await api.review.getAll.query();
-  const updates = await api.update.getAll.query();
-  const products = await api.product.getAll.query();
-  const images = await api.image.getAll.query();
-  const about = await api.about.get.query();
+  const reviews = await api.review.getAll();
+  const updates = await api.update.getAll();
+  const products = await api.product.getAll();
+  const images = await api.image.getAll();
+  const about = await api.about.get();
 
   return (
     <>
