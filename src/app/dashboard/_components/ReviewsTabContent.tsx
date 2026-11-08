@@ -80,7 +80,8 @@ function ReviewView(props: {
 
 const reviewFormSchema = z.object({
   author: z.string().min(1).max(255),
-  rating: z.coerce.number().min(1).max(5),
+  // The number input hands over a string once edited; coerce it on submit.
+  rating: z.coerce.number<string | number>().min(1).max(5),
   content: z.string().min(1),
   datePosted: z.date(),
 });
@@ -90,7 +91,11 @@ function ReviewEditDialog(props: {
   review: RouterOutputs["review"]["getAll"][number];
   children: ReactNode;
 }) {
-  const form = useForm<z.infer<typeof reviewFormSchema>>({
+  const form = useForm<
+    z.input<typeof reviewFormSchema>,
+    unknown,
+    z.output<typeof reviewFormSchema>
+  >({
     resolver: zodResolver(reviewFormSchema),
     defaultValues: {
       author: props.review.author,
@@ -130,7 +135,7 @@ function ReviewEditDialog(props: {
     },
   });
 
-  function onSubmit(values: z.infer<typeof reviewFormSchema>) {
+  function onSubmit(values: z.output<typeof reviewFormSchema>) {
     updateReview.mutate({
       id: props.review.id,
       author: values.author,
