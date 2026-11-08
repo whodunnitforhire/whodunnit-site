@@ -36,7 +36,7 @@ export default function ImageChooser(props: {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button className={"space-x-2 " + props.className}>
           <FileImage className="h-5 w-5" />
           <span>Choose Image</span>
@@ -104,15 +104,18 @@ function GridItem(props: {
 // ===========================================================================
 // Upload Button
 // ===========================================================================
-function OptionsMenu(props: { setLoading: (isLoading: boolean) => void } & ButtonProps) {
+function OptionsMenu({
+  setLoading,
+  ...buttonProps
+}: { setLoading: (isLoading: boolean) => void } & ButtonProps) {
   const utils = api.useUtils();
 
   const deleteUnused = api.image.prune.useMutation({
     onMutate: () => {
-      props.setLoading(true)
+      setLoading(true)
     },
     onSettled: () => {
-      props.setLoading(false)
+      setLoading(false)
     },
     onError: () => {
       toast.error("Something went wrong.");
@@ -129,7 +132,7 @@ function OptionsMenu(props: { setLoading: (isLoading: boolean) => void } & Butto
         <Button
           size="icon"
           variant="ghost"
-          {...props}
+          {...buttonProps}
         >
           <MoreVertical className="h-5 w-5" />
         </Button>
@@ -239,7 +242,7 @@ function DeleteDialog(props: { image: RouterOutputs["image"]["getAll"][number] }
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button
           size="icon"
           variant="destructive"

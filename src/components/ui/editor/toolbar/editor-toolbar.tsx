@@ -106,7 +106,8 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           size="icon"
           className="mr-1"
           tooltip="Horizontal rule"
-          onPressedChange={() => editor.chain().focus().setHorizontalRule().run()}>
+          onPressedChange={() => editor.chain().focus().setHorizontalRule().run()}
+          pressed={false}>
           <Minus className="h-4 w-4" />
         </Toggle>
 
@@ -118,7 +119,8 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           size="icon"
           className="mr-1"
           onPressedChange={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().chain().focus().undo().run()}>
+          disabled={!editor.can().chain().focus().undo().run()}
+          pressed={false}>
           <Undo className="h-4 w-4" />
         </Toggle>
 
@@ -126,7 +128,8 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           size="icon"
           className="mr-1"
           onPressedChange={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().chain().focus().redo().run()}>
+          disabled={!editor.can().chain().focus().redo().run()}
+          pressed={false}>
           <Redo className="h-4 w-4" />
         </Toggle>
       </ToggleGroup>

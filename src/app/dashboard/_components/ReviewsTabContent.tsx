@@ -189,10 +189,22 @@ function ReviewEditDialog(props: {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent
+                      className="w-auto p-0"
+                      align="start"
+                      // Focus the selected day (the calendar's tabbable day) instead of the
+                      // popover's first button, the previous-month arrow.
+                      onOpenAutoFocus={(e) => {
+                        e.preventDefault();
+                        (e.target as HTMLElement)
+                          .querySelector<HTMLElement>('[role="grid"] button[tabindex="0"]')
+                          ?.focus();
+                      }}
+                    >
                       <Calendar
                         mode="single"
                         selected={field.value}
+                        defaultMonth={field.value}
                         onSelect={field.onChange}
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")

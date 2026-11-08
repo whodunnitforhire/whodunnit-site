@@ -22,7 +22,7 @@ export default function CallNowDialog(props: CallNowDialogProps) {
 
   return (
     <Dialog>
-      <DialogTrigger>{props.children}</DialogTrigger>
+      <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent className="flex flex-col items-center w-11/12 sm:w-full rounded-md">
         <DialogHeader>
           <SectionHeader value="contact us" />

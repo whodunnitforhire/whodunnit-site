@@ -185,7 +185,7 @@ export function UpdateEditDialog(props: {
     },
     onSuccess: () => {
       void utils.update.getAll.invalidate();
-      toast.success("Review updated.");
+      toast.success("Update saved.");
       setOpen(false);
     },
   });
@@ -202,7 +202,7 @@ export function UpdateEditDialog(props: {
     },
     onSuccess: () => {
       void utils.update.getAll.invalidate();
-      toast.success("Review created.");
+      toast.success("Update created.");
       setOpen(false);
     },
   });
@@ -219,7 +219,7 @@ export function UpdateEditDialog(props: {
     },
     onSuccess: () => {
       void utils.update.getAll.invalidate();
-      toast.success("Post deleted.");
+      toast.success("Update deleted.");
       setOpen(false);
     },
   });
