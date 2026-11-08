@@ -25,7 +25,10 @@
   },
   // Wrangler creates the DNS record and certificate for each custom domain on deploy. Each
   // hostname also needs the admin paths added to the Access application (see README).
-  "routes": [{ "pattern": "new.whodunnitforhire.com", "custom_domain": true }],
+  "routes": [
+    { "pattern": "whodunnitforhire.com", "custom_domain": true },
+    { "pattern": "www.whodunnitforhire.com", "custom_domain": true }
+  ],
   // workers.dev and preview URLs would bypass Cloudflare Access, so both stay off.
   "workers_dev": false,
   "preview_urls": false
