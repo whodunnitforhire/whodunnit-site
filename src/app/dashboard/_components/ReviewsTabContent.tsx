@@ -63,7 +63,7 @@ function ReviewView(props: {
   const relativeTime = new RelativeTime();
   const date = relativeTime.from(props.review.datePosted)
   return (
-    <Card className="relative items-start space-y-2 p-6">
+    <Card className="relative items-start p-6 [&>*+*]:mt-2">
       <ReviewEditDialog review={props.review}>
         <Button className="absolute right-6 top-6 z-50 space-x-2 shadow-md">
           <Edit className="h-4 w-4" />

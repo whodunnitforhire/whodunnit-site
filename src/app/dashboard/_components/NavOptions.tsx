@@ -34,7 +34,7 @@ export default function NavOptions(props: { email: string } & ButtonProps) {
         <DropdownMenuSeparator />
         <DropdownMenuLabel className="flex gap-2 overflow-hidden">
           <SquareUserRound className="h-5 w-5" />
-          <span className="max-w-32 overflow-hidden overflow-ellipsis whitespace-nowrap">
+          <span className="max-w-32 overflow-hidden text-ellipsis whitespace-nowrap">
             {props.email}
           </span>
         </DropdownMenuLabel>

@@ -23,7 +23,7 @@ const Editor = ({ content, placeholder, onChange }: EditorProps) => {
     shouldRerenderOnTransaction: true,
     editorProps: {
       attributes: {
-        class: "focus:outline-none",
+        class: "focus:outline-hidden",
       },
     },
     content: content,

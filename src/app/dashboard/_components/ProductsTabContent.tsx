@@ -57,7 +57,7 @@ export default function ProductsTabContent(props: {
         </ProductEditDialog>
       </div>
       <Separator />
-    <div className="grid auto-rows-fr grid-cols-1 gap-4 break-words pt-4 sm:grid-cols-3 lg:grid-cols-5">
+    <div className="grid auto-rows-fr grid-cols-1 gap-4 wrap-break-word pt-4 sm:grid-cols-3 lg:grid-cols-5">
         {products.map((product) => (
           <ProductView key={product.id} product={product} initialImages={props.initialImages} />
         ))}

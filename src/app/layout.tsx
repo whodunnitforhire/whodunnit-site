@@ -10,7 +10,7 @@ import { Toaster } from "sonner";
 
 const fontSans = FontSans({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
 });
 
 export const metadata = {
