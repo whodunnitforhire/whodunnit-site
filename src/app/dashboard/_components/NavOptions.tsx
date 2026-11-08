@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, SquareUserRound } from "lucide-react";
 import { useTheme } from "next-themes";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 export default function NavOptions(props: { email: string } & ButtonProps) {
   const { setTheme } = useTheme();
@@ -40,9 +39,10 @@ export default function NavOptions(props: { email: string } & ButtonProps) {
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <LogoutLink postLogoutRedirectURL="/">
-          <DropdownMenuItem>Logout</DropdownMenuItem>
-        </LogoutLink>
+        {/* Ends the Cloudflare Access session (only exists behind Access, so it 404s locally). */}
+        <DropdownMenuItem asChild>
+          <a href="/cdn-cgi/access/logout">Logout</a>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

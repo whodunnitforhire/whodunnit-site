@@ -1,26 +1,29 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Prisma schema. The database is Cloudflare D1 (SQLite), reached through
+// @prisma/adapter-d1 at runtime. Schema changes go through SQL migrations in
+// ./migrations (see "Changing the database schema" in README.md).
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+    provider = "prisma-client"
+    output   = "../src/generated/prisma"
+    runtime  = "cloudflare"
+    // Half the size of the default "fast" build; keeps the Worker under the 3 MiB free-plan limit.
+    compilerBuild = "small"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider = "sqlite"
 }
 
 model About {
     id        String   @id @default(cuid())
     updatedAt DateTime @updatedAt
-    content   String   @db.Text
+    content   String
 }
 
 model Image {
     id        String    @id @default(cuid())
     createdAt DateTime  @default(now())
-    url       String    @db.VarChar(2083)
+    url       String
     size      Int
     updates   Update[]
     Product   Product[]
@@ -32,11 +35,11 @@ model Update {
     updatedAt  DateTime @updatedAt
     image      Image    @relation(fields: [imageId], references: [id])
     imageId    String
-    title      String   @db.VarChar(255)
-    caption    String   @db.VarChar(255)
-    content    String   @db.Text
-    buttonName String   @db.VarChar(255)
-    buttonLink String   @db.VarChar(2083)
+    title      String
+    caption    String
+    content    String
+    buttonName String
+    buttonLink String
 
     @@index([imageId])
 }
@@ -47,8 +50,8 @@ model Product {
     updatedAt  DateTime @updatedAt
     image      Image    @relation(fields: [imageId], references: [id])
     imageId    String
-    title      String   @db.VarChar(255)
-    caption    String   @db.VarChar(255)
+    title      String
+    caption    String
 
     @@index([imageId])
 }
@@ -58,6 +61,6 @@ model Review {
     updatedAt  DateTime @updatedAt
     rating     Int
     datePosted DateTime @default(now())
-    content    String   @db.Text
-    author     String   @db.VarChar(255)
+    content    String
+    author     String
 }

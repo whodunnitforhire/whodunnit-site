@@ -20,7 +20,6 @@ import TextCollapser from "@/components/TextCollapser";
 import { Calendar, Phone } from "lucide-react";
 import CallNowDialog from "./_components/CallNowDialog";
 import { Separator } from "@/components/ui/separator";
-import DashboardButton from "./_components/DashboardButton";
 import RelativeTime from "@yaireo/relative-time";
 
 export const dynamic = "force-dynamic";
@@ -71,7 +70,6 @@ function Navbar() {
               <span className="hidden sm:inline">Events</span>
             </Button>
           </Link>
-          <DashboardButton />
           <ThemeToggle size="sm" variant="ghost" className="hidden sm:inline" />
         </div>
       </div>
@@ -86,6 +84,10 @@ function Footer() {
       <Separator />
       <div className="flex flex-col items-center gap-4 pt-8 text-sm opacity-50 sm:pt-12 sm:text-base">
         <p className="text-center">{`© ${year} Whodunnit for Hire, LLC | All rights reserved.`}</p>
+        {/* A full page load (not <Link>), so Cloudflare Access can redirect to its login page. */}
+        <a href="/dashboard" className="text-xs hover:underline">
+          Admin
+        </a>
       </div>
     </footer>
   );

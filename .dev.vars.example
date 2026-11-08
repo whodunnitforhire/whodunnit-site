@@ -1,0 +1,8 @@
+# Local settings for both `npm run dev` and `npm run preview`. Copy to .dev.vars (gitignored).
+# Values here override the `vars` in wrangler.jsonc. Never put these in production.
+
+# Local dev has no Cloudflare Access in front of it, so blank the Access vars from wrangler.jsonc
+# and treat every request as this pretend admin (see src/server/auth.ts).
+CF_ACCESS_TEAM_DOMAIN=
+CF_ACCESS_AUD=
+DEV_ADMIN_EMAIL=dev@localhost

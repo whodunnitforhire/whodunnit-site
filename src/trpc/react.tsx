@@ -6,7 +6,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import { useState } from "react";
 
 import { type AppRouter } from "@/server/api/root";
-import { getUrl, transformer } from "./shared";
+import { transformer } from "./shared";
 
 export const api = createTRPCReact<AppRouter>();
 
@@ -22,8 +22,10 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             process.env.NODE_ENV === "development" ||
             (op.direction === "down" && op.result instanceof Error),
         }),
+        // Only the dashboard calls this from the browser; server components use the direct
+        // caller in ./server.ts, so a relative URL is enough.
         unstable_httpBatchStreamLink({
-          url: getUrl(),
+          url: "/api/trpc",
         }),
       ],
     })
