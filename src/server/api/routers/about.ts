@@ -27,13 +27,11 @@ export const aboutRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       let record = await ctx.db.about.findFirst();
-      if (!record) {
-        record = await ctx.db.about.create({
-          data: {
-            content: "About section...",
-          },
-        });
-      }
+      record ??= await ctx.db.about.create({
+        data: {
+          content: "About section...",
+        },
+      });
       return ctx.db.about.update({
         where: {
           id: record.id,

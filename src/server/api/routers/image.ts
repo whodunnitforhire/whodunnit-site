@@ -1,10 +1,11 @@
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { z } from "zod";
-import { UTApi } from 'uploadthing/server';
 
 import { createTRPCRouter, publicProcedure, privateProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
-const utapi = new UTApi()
+// Uploads go through POST /api/admin/images; the R2 object key is the Image id.
+const bucket = () => getCloudflareContext().env.IMAGES_BUCKET;
 
 export const imageRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -31,24 +32,6 @@ export const imageRouter = createTRPCRouter({
     });
   }),
 
-  create: privateProcedure
-    .input(
-      z.object({
-        key: z.string().min(1),
-        url: z.string().min(1),
-        size: z.number(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.image.create({
-        data: {
-          id: input.key,
-          url: input.url,
-          size: input.size,
-        },
-      });
-    }),
-
   delete: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -68,13 +51,7 @@ export const imageRouter = createTRPCRouter({
           code: "CONFLICT", 
         });
       }
-      const result = await utapi.deleteFiles(input.id);
-      if (!result.success) {
-        throw new TRPCError({
-          message: "Image service provider failed to delete images.",
-          code: "INTERNAL_SERVER_ERROR",
-        });
-      }
+      await bucket().delete(input.id);
       return ctx.db.image.delete({
         where: {
           id: input.id,
@@ -91,14 +68,9 @@ export const imageRouter = createTRPCRouter({
       },
     });
     const unusedIds = unusedImages.map((i) => i.id);
-    if (unusedIds.length > 0) {
-      const result = await utapi.deleteFiles(unusedIds);
-      if (!result.success) {
-        throw new TRPCError({
-          message: "Failed to delete files",
-          code: "INTERNAL_SERVER_ERROR",
-        });
-      }
+    // R2 accepts at most 1000 keys per delete call.
+    for (let i = 0; i < unusedIds.length; i += 1000) {
+      await bucket().delete(unusedIds.slice(i, i + 1000));
     }
     return ctx.db.image.deleteMany({
       where: {

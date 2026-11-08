@@ -10,9 +10,8 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { db } from "@/server/db";
-
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { isAdmin } from "@/server/auth";
+import { getDb } from "@/server/db";
 
 /**
  * 1. CONTEXT
@@ -28,7 +27,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
-    db,
+    db: getDb(),
     ...opts,
   };
 };
@@ -79,14 +78,8 @@ export const publicProcedure = t.procedure;
 
 // Private (authorized) procedure
 export const privateProcedure = t.procedure.use(async (opts) => {
-  const { isAuthenticated, getPermission } = getKindeServerSession();
-  const authed = await isAuthenticated();
-  if (!authed) {
-    throw new TRPCError({ code: "UNAUTHORIZED" })
-  }
-  const access = await getPermission("access:dashboard");
-  if (!access?.isGranted) {
-    throw new TRPCError({ code: "UNAUTHORIZED" })
+  if (!(await isAdmin(opts.ctx.headers))) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return opts.next();
 });

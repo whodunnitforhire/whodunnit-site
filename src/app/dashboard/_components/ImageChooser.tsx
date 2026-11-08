@@ -6,12 +6,11 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { api } from "@/trpc/react";
 import { type RouterOutputs } from "@/trpc/shared";
 import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
-import { FileImage, Loader2, MoreVertical, Trash } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { FileImage, Loader2, MoreVertical, Trash, Upload } from "lucide-react";
+import { type ChangeEvent, type ReactNode, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { UploadButton } from "@/lib/uploadthing";
-import { type UploadFileResponse } from "uploadthing/client";
+import { IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/images";
 import ImageLoader from "@/components/ImageLoader";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
@@ -152,42 +151,61 @@ function OptionsMenu(props: { setLoading: (isLoading: boolean) => void } & Butto
 // ===========================================================================
 function ImageUploader(props: { setLoading: (isLoading: boolean) => void, className?: string }) {
   const utils = api.useUtils();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const createImage = api.image.create.useMutation({
-    onMutate: () => {
-      props.setLoading(true)
-    },
-    onSettled: () => {
-      props.setLoading(false)
-    },
-    onError: () => {
+  async function upload(file: File) {
+    if (!IMAGE_TYPES[file.type]) {
+      toast.error("Only JPEG, PNG, WebP, GIF and AVIF images can be uploaded.");
+      return;
+    }
+    if (file.size > MAX_IMAGE_BYTES) {
+      toast.error("Images must be 4 MB or smaller.");
+      return;
+    }
+    const body = new FormData();
+    body.append("file", file);
+    const res = await fetch("/api/admin/images", { method: "POST", body });
+    if (!res.ok) {
+      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+      toast.error(data?.error ?? "Something went wrong.");
+      return;
+    }
+    toast.success("Image uploaded.");
+  }
+
+  async function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = "";
+    if (files.length === 0) return;
+    props.setLoading(true);
+    try {
+      for (const file of files) await upload(file);
+    } catch {
       toast.error("Something went wrong.");
-    },
-    onSuccess: () => {
-      void utils.image.getAll.invalidate();
-      toast.success("Image uploaded.");
-    },
-  });
-
-  function uploadImage(
-    res: UploadFileResponse<{
-      uploadedBy: string;
-    }>[],
-  ) {
-    res.map((img) => {
-      createImage.mutate({ key: img.key, url: img.url, size: img.size });
-    });
+    } finally {
+      await utils.image.getAll.invalidate();
+      props.setLoading(false);
+    }
   }
 
   return (
-    <UploadButton
-      endpoint="imageUploader"
-      onClientUploadComplete={uploadImage}
-      onUploadError={(error: Error) => {
-        toast.error(error.message);
-      }}
-      className={props.className}
-    />
+    <>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={Object.keys(IMAGE_TYPES).join(",")}
+        multiple
+        hidden
+        onChange={(e) => void handleChange(e)}
+      />
+      <Button
+        className={"space-x-2 " + (props.className ?? "")}
+        onClick={() => inputRef.current?.click()}
+      >
+        <Upload className="h-4 w-4" />
+        <span>Upload image</span>
+      </Button>
+    </>
   );
 }
 
